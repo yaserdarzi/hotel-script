@@ -19,7 +19,7 @@ class DataSeeder extends Seeder
             'percent' => 10
         ]);
         \App\Room::create([
-            'type_app_id' => 2,
+            'type_app_id' => 3,
             'hotel_id' => $hotel->id,
             'title' => "اتاق دبل",
             'capacity' => 4,

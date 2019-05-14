@@ -5,6 +5,7 @@ namespace App;
 use App\Inside\Constants;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Room extends Model
 {
@@ -18,4 +19,10 @@ class Room extends Model
         'service', 'capacity', 'count', 'percent', 'price', 'sort'
     ];
     protected $dates = ['deleted_at'];
+
+    public function gallery()
+    {
+        return $this->hasMany(RoomGallery::class, 'id', 'room_id')
+            ->select('*', DB::raw("CASE WHEN path != '' THEN (concat ( '" . url('') . "/files/room/',room_id,'/', path) ) ELSE '' END as path"));
+    }
 }
