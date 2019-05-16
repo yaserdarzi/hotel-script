@@ -22,7 +22,7 @@ class Room extends Model
 
     public function gallery()
     {
-        return $this->hasMany(RoomGallery::class, 'id', 'room_id')
+        return $this->hasMany(RoomGallery::class, 'room_id', 'id')
             ->select('*', DB::raw("CASE WHEN path != '' THEN (concat ( '" . url('') . "/files/room/',room_id,'/', path) ) ELSE '' END as path"));
     }
 }

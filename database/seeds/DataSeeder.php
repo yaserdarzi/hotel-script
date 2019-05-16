@@ -12,11 +12,39 @@ class DataSeeder extends Seeder
     public function run()
     {
         $hotel = \App\Hotel::create([
-            'type_app_id' => 2,
+            'type_app_id' => 3,
             'title' => "سان رایز",
             'icon' => "",
             'type' => "percent",
             'percent' => 10
+        ]);
+        \App\HotelGallery::create([
+            'type_app_id' => 3,
+            'hotel_id' => $hotel->id,
+            'path' => "01.jpg",
+            'mime_type' => "image/jpg",
+            'created_at' => date('Y-m-d')
+        ]);
+        \App\HotelGallery::create([
+            'type_app_id' => 3,
+            'hotel_id' => $hotel->id,
+            'path' => "02.jpg",
+            'mime_type' => "image/jpg",
+            'created_at' => date('Y-m-d')
+        ]);
+        \App\HotelGallery::create([
+            'type_app_id' => 3,
+            'hotel_id' => $hotel->id,
+            'path' => "03.jpg",
+            'mime_type' => "image/jpg",
+            'created_at' => date('Y-m-d')
+        ]);
+        \App\HotelGallery::create([
+            'type_app_id' => 3,
+            'hotel_id' => $hotel->id,
+            'path' => "04.jpg",
+            'mime_type' => "image/jpg",
+            'created_at' => date('Y-m-d')
         ]);
         \App\Room::create([
             'type_app_id' => 3,

@@ -20,6 +20,9 @@ Route::middleware('app.check')->namespace('Api\V1')->prefix('/v1')->group(functi
     //Site Before login
     Route::namespace('Site')->prefix('/site')->group(function () {
 
+        //Hotel
+        Route::resource('/hotel', 'HotelController');
+
         //Room
         Route::resource('{hotel_id}/room', 'RoomController');
 
