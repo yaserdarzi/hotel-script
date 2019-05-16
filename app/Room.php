@@ -10,13 +10,11 @@ use Illuminate\Support\Facades\DB;
 class Room extends Model
 {
     use SoftDeletes;
-    protected $casts = [
-        'service' => 'object',
-    ];
     protected $table = Constants::ROOM_DB;
     protected $fillable = [
         'type_app_id', 'hotel_id', 'title', 'image', 'desc',
-        'service', 'capacity', 'count', 'percent', 'price', 'sort'
+        'service', 'capacity', 'count', 'percent', 'price', 'sort',
+        'is_breakfast', 'is_lunch', 'is_dinner'
     ];
     protected $dates = ['deleted_at'];
 

@@ -18,13 +18,13 @@ class RoomController extends ApiController
      */
     public function index($hotel_id, Request $request)
     {
-//        $arrayStartDate = explode('/', $request->input('start_date'));
-//        $arrayEndDate = explode('/', $request->input('end_date'));
-//        $fromDate = \Morilog\Jalali\jDateTime::toGregorian($arrayStartDate[0], $arrayStartDate[1], $arrayStartDate[2]);
-//        $toDate = \Morilog\Jalali\jDateTime::toGregorian($arrayEndDate[0], $arrayEndDate[1], $arrayEndDate[2]);
-//
-//
-//        dd($fromDate );
+        $arrayStartDate = explode('/', $request->input('start_date'));
+        $arrayEndDate = explode('/', $request->input('end_date'));
+        $fromDate = \Morilog\Jalali\jDateTime::toGregorian($arrayStartDate[0], $arrayStartDate[1], $arrayStartDate[2]);
+        $toDate = \Morilog\Jalali\jDateTime::toGregorian($arrayEndDate[0], $arrayEndDate[1], $arrayEndDate[2]);
+
+
+        dd($fromDate );
 //
 //
 //        $toDate = strtotime($toDate[0] . '-' . $toDate[1] . '-' . $toDate[2]);

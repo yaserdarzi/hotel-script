@@ -23,6 +23,11 @@ class HotelTableMigration extends Migration
             $table->bigInteger('percent')->nullable()->default(0);
             $table->bigInteger('price')->nullable()->default(0);
             $table->bigInteger('award')->nullable()->default(0);
+            $table->json('global')->nullable();
+            $table->json('possibilities')->nullable();
+            $table->json('terms_of_use')->nullable();
+            $table->double('lat')->default(0);
+            $table->double('long')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

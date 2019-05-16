@@ -13,10 +13,13 @@ class Constants
     //Database
     const HOTEL_DB = 'hotel';
     const HOTEL_GALLERY_DB = 'hotel_gallery';
+    const HOTEL_TOOLS_DB = 'hotel_tools';
+    const HOTEL_DISTANCE_DB = 'hotel_distance';
     const ROOM_DB = 'room';
     const ROOM_GALLERY_DB = 'room_gallery';
     const ROOM_BOOKING_DB = 'room_booking';
     const ROOM_BOOKING_USE_DB = 'room_booking_use';
+    const ROOM_TOOLS_DB = 'room_tools';
 
 
     //DataBaseName

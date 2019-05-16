@@ -11,9 +11,15 @@ class Hotel extends Model
 {
     use SoftDeletes;
     protected $table = Constants::HOTEL_DB;
+    protected $casts = [
+        'global' => 'object',
+        'possibilities' => 'object',
+        'terms_of_use' => 'object',
+    ];
     protected $fillable = [
         'type_app_id', 'title', 'icon', 'type', 'percent',
-        'price', 'award'
+        'price', 'award', 'global', 'possibilities', 'terms_of_use',
+        'lat', 'long'
     ];
     protected $dates = ['deleted_at'];
 

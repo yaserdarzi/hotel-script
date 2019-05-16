@@ -21,12 +21,14 @@ class RoomTableMigration extends Migration
             $table->string('title');
             $table->string('image')->nullable();
             $table->longText('desc')->nullable();
-            $table->json('service')->nullable();
             $table->bigInteger('capacity');
             $table->bigInteger('count');
             $table->bigInteger('percent')->nullable()->default(0);
             $table->bigInteger('price')->nullable()->default(0);
             $table->integer('sort')->default(1);
+            $table->boolean('is_breakfast')->default(true);
+            $table->boolean('is_lunch')->default(false);
+            $table->boolean('is_dinner')->default(false);
             $table->timestamps();
             $table->softDeletes();
 
