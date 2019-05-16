@@ -13,7 +13,7 @@ class Room extends Model
     protected $table = Constants::ROOM_DB;
     protected $fillable = [
         'type_app_id', 'hotel_id', 'title', 'image', 'desc',
-        'service', 'capacity', 'count', 'percent', 'price', 'sort',
+        'bed', 'capacity', 'count', 'percent', 'price', 'sort',
         'is_breakfast', 'is_lunch', 'is_dinner'
     ];
     protected $dates = ['deleted_at'];
@@ -22,5 +22,11 @@ class Room extends Model
     {
         return $this->hasMany(RoomGallery::class, 'room_id', 'id')
             ->select('*', DB::raw("CASE WHEN path != '' THEN (concat ( '" . url('') . "/files/room/',room_id,'/', path) ) ELSE '' END as path"));
+    }
+
+    public function tools()
+    {
+        return $this->hasMany(RoomTools::class, 'room_id', 'id')
+            ->select('*', DB::raw("CASE WHEN icon != '' THEN (concat ( '" . url('') . "/files/room/tools/', icon) ) ELSE '' END as icon"));
     }
 }

@@ -17,7 +17,9 @@ class Hotel extends Model
         'terms_of_use' => 'object',
     ];
     protected $fillable = [
-        'type_app_id', 'title', 'icon', 'type', 'percent',
+        'type_app_id', 'title', 'icon', 'desc', 'address',
+        'star', 'count_floor', 'count_room', 'delivery_room',
+        'discharge_room', 'type', 'percent',
         'price', 'award', 'global', 'possibilities', 'terms_of_use',
         'lat', 'long'
     ];
@@ -29,4 +31,19 @@ class Hotel extends Model
         return $this->hasMany(HotelGallery::class, 'hotel_id', 'id')
             ->select('*', DB::raw("CASE WHEN path != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/', path) ) ELSE '' END as path"));
     }
+
+    public function tools()
+    {
+        return $this->hasMany(HotelTools::class, 'hotel_id', 'id')
+            ->select('*', DB::raw("CASE WHEN icon != '' THEN (concat ( '" . url('') . "/files/hotel/tools/', icon) ) ELSE '' END as icon"));
+    }
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class, 'hotel_id', 'id')
+            ->with("tools", "gallery")
+            ->select('*', DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/room/', image) ) ELSE '' END as image"));
+    }
+
+
 }

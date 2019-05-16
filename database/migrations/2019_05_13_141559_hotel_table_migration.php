@@ -19,6 +19,13 @@ class HotelTableMigration extends Migration
             $table->bigInteger('type_app_id');
             $table->string('title');
             $table->string('icon');
+            $table->longText('desc')->nullable();
+            $table->text('address')->nullable();
+            $table->integer('star')->default(0);
+            $table->integer('count_floor')->default(0);
+            $table->integer('count_room')->default(0);
+            $table->string('delivery_room')->nullable();
+            $table->string('discharge_room')->nullable();
             $table->string('type');
             $table->bigInteger('percent')->nullable()->default(0);
             $table->bigInteger('price')->nullable()->default(0);

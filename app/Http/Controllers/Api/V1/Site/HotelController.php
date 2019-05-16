@@ -54,7 +54,7 @@ class HotelController extends ApiController
     public function show(Request $request, $hotel_id)
     {
         $hotel = Hotel::whereIn('type_app_id', $request->input('app_id'))
-            ->with("gallery")
+            ->with("rooms","tools", "gallery")
             ->where(['id' => $hotel_id])
             ->select('*', DB::raw("CASE WHEN icon != '' THEN (concat ( '" . url('') . "/files/hotel/', icon) ) ELSE '' END as icon"))
             ->first();
