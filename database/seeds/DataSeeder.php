@@ -137,6 +137,7 @@ class DataSeeder extends Seeder
             'hotel_id' => $hotel->id,
             'title' => "اتاق دو تخته دبل",
             'bed' => "۱ تخت دبل",
+            'image' => "no-image.png",
             'capacity' => 2,
             'count' => 1,
             'percent' => 10000,
@@ -149,6 +150,7 @@ class DataSeeder extends Seeder
             'bed' => "۲ تخت سینگل",
             'capacity' => 2,
             'count' => 1,
+            'image' => "no-image.png",
             'percent' => 10000,
             'price' => 200000,
         ]);
@@ -158,6 +160,7 @@ class DataSeeder extends Seeder
             'title' => "سوئیت یکخوابه دو نفره",
             'bed' => "دبل یا سینگل",
             'capacity' => 2,
+            'image' => "no-image.png",
             'count' => 1,
             'percent' => 15000,
             'price' => 250000,
@@ -169,6 +172,7 @@ class DataSeeder extends Seeder
             'bed' => " ۱ تخت دبل",
             'capacity' => 2,
             'count' => 1,
+            'image' => "no-image.png",
             'percent' => 0,
             'price' => 0,
         ]);
@@ -179,6 +183,7 @@ class DataSeeder extends Seeder
             'bed' => "۱ تخت سینگل و ۱ تخت دبل",
             'capacity' => 3,
             'count' => 1,
+            'image' => "no-image.png",
             'percent' => 10000,
             'price' => 310000,
         ]);
@@ -188,6 +193,7 @@ class DataSeeder extends Seeder
             'title' => "اتاق سه تخته",
             'bed' => "۱ تخت سینگل و ۱ تخت دبل",
             'capacity' => 3,
+            'image' => "no-image.png",
             'count' => 1,
             'percent' => 75000,
             'price' => 400000,
@@ -195,6 +201,7 @@ class DataSeeder extends Seeder
         \App\Room::create([
             'type_app_id' => $type_app_id,
             'hotel_id' => $hotel->id,
+            'image' => "no-image.png",
             'title' => "سوئیت یکخوابه چهار نفره",
             'bed' => "۲ تخت سینگل و ۱ تخت دبل",
             'capacity' => 5,

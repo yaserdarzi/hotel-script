@@ -21,6 +21,7 @@ class RoomBookingUseTableMigration extends Migration
             $table->bigInteger('user_id');
             $table->bigInteger('use_user_id');
             $table->bigInteger('invoice_id');
+            $table->string('ticket_number');
             $table->timestamp('date');
             $table->timestamp('created_at');
         });
