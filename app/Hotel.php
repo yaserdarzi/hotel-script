@@ -38,6 +38,11 @@ class Hotel extends Model
             ->select('*', DB::raw("CASE WHEN icon != '' THEN (concat ( '" . url('') . "/files/hotel/tools/', icon) ) ELSE '' END as icon"));
     }
 
+    public function distance()
+    {
+        return $this->hasMany(HotelDistance::class, 'hotel_id', 'id');
+    }
+
     public function rooms()
     {
         return $this->hasMany(Room::class, 'hotel_id', 'id')
