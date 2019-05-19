@@ -21,6 +21,7 @@ Route::middleware('app.check')->namespace('Api\V1')->prefix('/v1')->group(functi
     Route::namespace('Supplier')->prefix('/supplier')->group(function () {
 
         //Hotel
+        Route::post('/hotel/update/{hotel_id}', 'HotelController@update');
         Route::resource('/hotel', 'HotelController');
 
 
