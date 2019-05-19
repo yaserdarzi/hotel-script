@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class RoomGalleryTableMigration extends Migration
+class HotelGalleryTableMigration extends Migration
 {
     /**
      * Run the migrations.
@@ -14,16 +14,16 @@ class RoomGalleryTableMigration extends Migration
      */
     public function up()
     {
-        Schema::create(Constants::ROOM_GALLERY_DB, function (Blueprint $table) {
+        Schema::create(Constants::HOTEL_GALLERY_DB, function (Blueprint $table) {
             $table->increments('id');
-            $table->bigInteger('type_app_id');
-            $table->bigInteger('room_id');
+            $table->bigInteger('app_id');
+            $table->bigInteger('hotel_id');
             $table->string('path');
             $table->string('mime_type')->nullable();
             $table->timestamp('created_at');
         });
-        Schema::table(Constants::ROOM_GALLERY_DB, function (Blueprint $table) {
-            $table->foreign('room_id')->references('id')->on(Constants::ROOM_DB)->onDelete('cascade');
+        Schema::table(Constants::HOTEL_GALLERY_DB, function (Blueprint $table) {
+            $table->foreign('hotel_id')->references('id')->on(Constants::HOTEL_DB)->onDelete('cascade');
         });
     }
 
@@ -34,6 +34,6 @@ class RoomGalleryTableMigration extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(Constants::ROOM_GALLERY_DB);
+        Schema::dropIfExists(Constants::HOTEL_GALLERY_DB);
     }
 }

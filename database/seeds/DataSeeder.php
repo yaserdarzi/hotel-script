@@ -11,20 +11,19 @@ class DataSeeder extends Seeder
      */
     public function run()
     {
-        $type_app_id = 3;
+        $app_id = 2;
+        $supplier_id = 2;
         $hotel = \App\Hotel::create([
-            'type_app_id' => $type_app_id,
-            'title' => "هتل سان رایز کیش",
+            'app_id' => $app_id,
+            'name' => "هتل سان رایز کیش",
             'address' => "کیش، مقابل بازار پردیس ۲",
             'star' => 3,
-            'icon' => "",
+            'logo' => "",
             'count_floor' => 4,
             'count_room' => 61,
             'delivery_room' => "14:00",
             'discharge_room' => "12:00",
-            'desc' => "هتل سه ستاره سان رایز کیش مقابل پردیس ۲ در سال ۱۳۸۲ افتتاح و جهت ارتقا سطح کیفی خدمات در سال ۱۳۹۷ مورد بازسازی قرار گرفت. ساختمان هتل در ۴ طبقه بنا و دارای ۶۱ باب اتاق و سوئیت با امکانات رفاهی مناسب می‌باشد. این مجموعه واقع در قلب مراکز تفریحی و خرید جزیره ای با آفتاب درخشان، دریایی آبی و کرانه ای چشم نواز و در نزدیکی بازارهای پردیس ۱ و ۲ واقع گردیده است. پرسنل هتل سان رایز در تلاش اند اقامتی دلنشین را برای شما میهمانان گرامی رقم بزنند.",
-            'type' => "percent",
-            'percent' => 10,
+            'about' => "هتل سه ستاره سان رایز کیش مقابل پردیس ۲ در سال ۱۳۸۲ افتتاح و جهت ارتقا سطح کیفی خدمات در سال ۱۳۹۷ مورد بازسازی قرار گرفت. ساختمان هتل در ۴ طبقه بنا و دارای ۶۱ باب اتاق و سوئیت با امکانات رفاهی مناسب می‌باشد. این مجموعه واقع در قلب مراکز تفریحی و خرید جزیره ای با آفتاب درخشان، دریایی آبی و کرانه ای چشم نواز و در نزدیکی بازارهای پردیس ۱ و ۲ واقع گردیده است. پرسنل هتل سان رایز در تلاش اند اقامتی دلنشین را برای شما میهمانان گرامی رقم بزنند.",
             'global' => array(
                 'تاریخ ساخت' => '۱۳۸۲ ( سال بازسازی ۱۳۹۷ )',
                 'وضعیت دید هتل' => 'خیابان | محوطه هتل',
@@ -51,29 +50,34 @@ class DataSeeder extends Seeder
             'lat' => 26.535363,
             'long' => 54.0181801
         ]);
+        \App\HotelSupplier::create([
+            'app_id' => $app_id,
+            'supplier_id' => $supplier_id,
+            'hotel_id' => $hotel->id,
+        ]);
         \App\HotelGallery::create([
-            'type_app_id' => $type_app_id,
+            'app_id' => $app_id,
             'hotel_id' => $hotel->id,
             'path' => "01.jpg",
             'mime_type' => "image/jpg",
             'created_at' => date('Y-m-d')
         ]);
         \App\HotelGallery::create([
-            'type_app_id' => $type_app_id,
+            'app_id' => $app_id,
             'hotel_id' => $hotel->id,
             'path' => "02.jpg",
             'mime_type' => "image/jpg",
             'created_at' => date('Y-m-d')
         ]);
         \App\HotelGallery::create([
-            'type_app_id' => $type_app_id,
+            'app_id' => $app_id,
             'hotel_id' => $hotel->id,
             'path' => "03.jpg",
             'mime_type' => "image/jpg",
             'created_at' => date('Y-m-d')
         ]);
         \App\HotelGallery::create([
-            'type_app_id' => $type_app_id,
+            'app_id' => $app_id,
             'hotel_id' => $hotel->id,
             'path' => "04.jpg",
             'mime_type' => "image/jpg",
@@ -92,7 +96,7 @@ class DataSeeder extends Seeder
         ];
         foreach ($tools as $tool) {
             \App\HotelTools::create([
-                'type_app_id' => $type_app_id,
+                'app_id' => $app_id,
                 'hotel_id' => $hotel->id,
                 'icon' => "check.svg",
                 'title' => $tool,
@@ -124,7 +128,7 @@ class DataSeeder extends Seeder
         );
         foreach ($distance as $key => $value) {
             \App\HotelDistance::create([
-                'type_app_id' => $type_app_id,
+                'app_id' => $app_id,
                 'hotel_id' => $hotel->id,
                 'title' => $key,
                 'link' => "",
@@ -132,102 +136,102 @@ class DataSeeder extends Seeder
                 'created_at' => date('Y-m-d')
             ]);
         }
-        \App\Room::create([
-            'type_app_id' => $type_app_id,
-            'hotel_id' => $hotel->id,
-            'title' => "اتاق دو تخته دبل",
-            'bed' => "۱ تخت دبل",
-            'image' => "no-image.png",
-            'capacity' => 2,
-            'count' => 1,
-            'percent' => 10000,
-            'price' => 200000,
-        ]);
-        \App\Room::create([
-            'type_app_id' => $type_app_id,
-            'hotel_id' => $hotel->id,
-            'title' => "اتاق دو تخته توئین",
-            'bed' => "۲ تخت سینگل",
-            'capacity' => 2,
-            'count' => 1,
-            'image' => "no-image.png",
-            'percent' => 10000,
-            'price' => 200000,
-        ]);
-        \App\Room::create([
-            'type_app_id' => $type_app_id,
-            'hotel_id' => $hotel->id,
-            'title' => "سوئیت یکخوابه دو نفره",
-            'bed' => "دبل یا سینگل",
-            'capacity' => 2,
-            'image' => "no-image.png",
-            'count' => 1,
-            'percent' => 15000,
-            'price' => 250000,
-        ]);
-        \App\Room::create([
-            'type_app_id' => $type_app_id,
-            'hotel_id' => $hotel->id,
-            'title' => "اتاق دو تخته دبل رویال",
-            'bed' => " ۱ تخت دبل",
-            'capacity' => 2,
-            'count' => 1,
-            'image' => "no-image.png",
-            'percent' => 0,
-            'price' => 0,
-        ]);
-        \App\Room::create([
-            'type_app_id' => $type_app_id,
-            'hotel_id' => $hotel->id,
-            'title' => "سوئیت یکخوابه سه نفره",
-            'bed' => "۱ تخت سینگل و ۱ تخت دبل",
-            'capacity' => 3,
-            'count' => 1,
-            'image' => "no-image.png",
-            'percent' => 10000,
-            'price' => 310000,
-        ]);
-        \App\Room::create([
-            'type_app_id' => $type_app_id,
-            'hotel_id' => $hotel->id,
-            'title' => "اتاق سه تخته",
-            'bed' => "۱ تخت سینگل و ۱ تخت دبل",
-            'capacity' => 3,
-            'image' => "no-image.png",
-            'count' => 1,
-            'percent' => 75000,
-            'price' => 400000,
-        ]);
-        \App\Room::create([
-            'type_app_id' => $type_app_id,
-            'hotel_id' => $hotel->id,
-            'image' => "no-image.png",
-            'title' => "سوئیت یکخوابه چهار نفره",
-            'bed' => "۲ تخت سینگل و ۱ تخت دبل",
-            'capacity' => 5,
-            'count' => 1,
-            'percent' => 40000,
-            'price' => 400000,
-        ]);
-        $roomTools = [
-            "پاورسوئیچ", " تلفن در اتاق ", " روم سرویس", "یخچال", "مبلمان",
-            "حمام", "صبحانه", "دراور", "آباژور", " کمد لباس", "تلویزیون",
-            " اینترنت در اتاق ", " امکان شارژ وسایل الکترونیکی",
-            " سیستم گرمایش و سرمایش ", " نوع قفل درب اتاق", " سیستم اعلام حریق",
-            " صندوق امانات داخل اتاق", " مینی بار با هزینه", " سیستم تهویه مطبوع دراتاق",
-            " سیستم اطفاء حریق دراتاق", " تلویزیون در اتاق ", " لوازم بهداشتی ",
-            "دمپایی", " سرویس بهداشتی فرنگی در اتاق"
-        ];
-        for ($i = 1; $i <= 7; $i++)
-            foreach ($roomTools as $tool) {
-                \App\RoomTools::create([
-                    'type_app_id' => $type_app_id,
-                    'room_id' => $i,
-                    'icon' => "check.svg",
-                    'title' => $tool,
-                    'created_at' => date('Y-m-d')
-                ]);
-            }
+//        \App\Room::create([
+//            'app_id' => $app_id,
+//            'hotel_id' => $hotel->id,
+//            'title' => "اتاق دو تخته دبل",
+//            'bed' => "۱ تخت دبل",
+//            'image' => "no-image.png",
+//            'capacity' => 2,
+//            'count' => 1,
+//            'percent' => 10000,
+//            'price' => 200000,
+//        ]);
+//        \App\Room::create([
+//            'app_id' => $app_id,
+//            'hotel_id' => $hotel->id,
+//            'title' => "اتاق دو تخته توئین",
+//            'bed' => "۲ تخت سینگل",
+//            'capacity' => 2,
+//            'count' => 1,
+//            'image' => "no-image.png",
+//            'percent' => 10000,
+//            'price' => 200000,
+//        ]);
+//        \App\Room::create([
+//            'app_id' => $app_id,
+//            'hotel_id' => $hotel->id,
+//            'title' => "سوئیت یکخوابه دو نفره",
+//            'bed' => "دبل یا سینگل",
+//            'capacity' => 2,
+//            'image' => "no-image.png",
+//            'count' => 1,
+//            'percent' => 15000,
+//            'price' => 250000,
+//        ]);
+//        \App\Room::create([
+//            'app_id' => $app_id,
+//            'hotel_id' => $hotel->id,
+//            'title' => "اتاق دو تخته دبل رویال",
+//            'bed' => " ۱ تخت دبل",
+//            'capacity' => 2,
+//            'count' => 1,
+//            'image' => "no-image.png",
+//            'percent' => 0,
+//            'price' => 0,
+//        ]);
+//        \App\Room::create([
+//            'app_id' => $app_id,
+//            'hotel_id' => $hotel->id,
+//            'title' => "سوئیت یکخوابه سه نفره",
+//            'bed' => "۱ تخت سینگل و ۱ تخت دبل",
+//            'capacity' => 3,
+//            'count' => 1,
+//            'image' => "no-image.png",
+//            'percent' => 10000,
+//            'price' => 310000,
+//        ]);
+//        \App\Room::create([
+//            'app_id' => $app_id,
+//            'hotel_id' => $hotel->id,
+//            'title' => "اتاق سه تخته",
+//            'bed' => "۱ تخت سینگل و ۱ تخت دبل",
+//            'capacity' => 3,
+//            'image' => "no-image.png",
+//            'count' => 1,
+//            'percent' => 75000,
+//            'price' => 400000,
+//        ]);
+//        \App\Room::create([
+//            'app_id' => $app_id,
+//            'hotel_id' => $hotel->id,
+//            'image' => "no-image.png",
+//            'title' => "سوئیت یکخوابه چهار نفره",
+//            'bed' => "۲ تخت سینگل و ۱ تخت دبل",
+//            'capacity' => 5,
+//            'count' => 1,
+//            'percent' => 40000,
+//            'price' => 400000,
+//        ]);
+//        $roomTools = [
+//            "پاورسوئیچ", " تلفن در اتاق ", " روم سرویس", "یخچال", "مبلمان",
+//            "حمام", "صبحانه", "دراور", "آباژور", " کمد لباس", "تلویزیون",
+//            " اینترنت در اتاق ", " امکان شارژ وسایل الکترونیکی",
+//            " سیستم گرمایش و سرمایش ", " نوع قفل درب اتاق", " سیستم اعلام حریق",
+//            " صندوق امانات داخل اتاق", " مینی بار با هزینه", " سیستم تهویه مطبوع دراتاق",
+//            " سیستم اطفاء حریق دراتاق", " تلویزیون در اتاق ", " لوازم بهداشتی ",
+//            "دمپایی", " سرویس بهداشتی فرنگی در اتاق"
+//        ];
+//        for ($i = 1; $i <= 7; $i++)
+//            foreach ($roomTools as $tool) {
+//                \App\RoomTools::create([
+//                    'app_id' => $app_id,
+//                    'room_id' => $i,
+//                    'icon' => "check.svg",
+//                    'title' => $tool,
+//                    'created_at' => date('Y-m-d')
+//                ]);
+//            }
 
 
     }

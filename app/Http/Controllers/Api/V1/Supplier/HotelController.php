@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Site;
+namespace App\Http\Controllers\Api\V1\Supplier;
 
 use App\Hotel;
 use App\Http\Controllers\ApiController;
-use App\Room;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
@@ -19,8 +18,8 @@ class HotelController extends ApiController
      */
     public function index(Request $request)
     {
-        $hotel = Hotel::whereIn('type_app_id', $request->input('app_id'))
-            ->get();
+        $hotel = Hotel::where('app_id', $request->input('app_id'))
+            ->select('id', 'name')->get();
         return $this->respond($hotel);
     }
 
@@ -53,10 +52,14 @@ class HotelController extends ApiController
      */
     public function show(Request $request, $hotel_id)
     {
-        $hotel = Hotel::whereIn('type_app_id', $request->input('app_id'))
-            ->with("rooms","tools", "distance", "gallery")
+        $hotel = Hotel::where('app_id', $request->input('app_id'))
+            ->with("tools", "distance", "gallery")
             ->where(['id' => $hotel_id])
-            ->select('*', DB::raw("CASE WHEN icon != '' THEN (concat ( '" . url('') . "/files/hotel/', icon) ) ELSE '' END as icon"))
+            ->select(
+                '*',
+                DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/', logo) ) ELSE '' END as logo"),
+                DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/thumb/', logo) ) ELSE '' END as logo_thumb")
+            )
             ->first();
         return $this->respond($hotel);
     }

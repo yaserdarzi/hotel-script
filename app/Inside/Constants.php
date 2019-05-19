@@ -5,13 +5,12 @@ namespace App\Inside;
 
 class Constants
 {
-    //App Setting
+    //App
     Const APP = "hotel";
-    Const TYPE_APP = "hotel";
-    Const TYPE_APP_CHILD = ["sunrise"];
 
     //Database
     const HOTEL_DB = 'hotel';
+    const HOTEL_SUPPLIER_DB = 'hotel_supplier';
     const HOTEL_GALLERY_DB = 'hotel_gallery';
     const HOTEL_TOOLS_DB = 'hotel_tools';
     const HOTEL_DISTANCE_DB = 'hotel_distance';

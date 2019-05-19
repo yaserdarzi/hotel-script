@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Site;
+namespace App\Http\Controllers\Api\V1\Room;
 
 use App\Http\Controllers\ApiController;
 use App\Room;

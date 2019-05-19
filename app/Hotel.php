@@ -17,11 +17,10 @@ class Hotel extends Model
         'terms_of_use' => 'object',
     ];
     protected $fillable = [
-        'type_app_id', 'title', 'icon', 'desc', 'address',
+        'app_id', 'name', 'logo', 'about', 'address',
         'star', 'count_floor', 'count_room', 'delivery_room',
-        'discharge_room', 'type', 'percent',
-        'price', 'award', 'global', 'possibilities', 'terms_of_use',
-        'lat', 'long'
+        'discharge_room', 'global', 'possibilities',
+        'terms_of_use', 'lat', 'long'
     ];
     protected $dates = ['deleted_at'];
 
@@ -29,13 +28,21 @@ class Hotel extends Model
     public function gallery()
     {
         return $this->hasMany(HotelGallery::class, 'hotel_id', 'id')
-            ->select('*', DB::raw("CASE WHEN path != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/', path) ) ELSE '' END as path"));
+            ->select(
+                '*',
+                DB::raw("CASE WHEN path != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/', path) ) ELSE '' END as path"),
+                DB::raw("CASE WHEN path != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/thumb/', path) ) ELSE '' END as path_thumb")
+            );
     }
 
     public function tools()
     {
         return $this->hasMany(HotelTools::class, 'hotel_id', 'id')
-            ->select('*', DB::raw("CASE WHEN icon != '' THEN (concat ( '" . url('') . "/files/hotel/tools/', icon) ) ELSE '' END as icon"));
+            ->select(
+                '*',
+                DB::raw("CASE WHEN icon != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/tools/', icon) ) ELSE '' END as icon"),
+                DB::raw("CASE WHEN icon != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/tools/thumb/', icon) ) ELSE '' END as icon_thumb")
+            );
     }
 
     public function distance()
@@ -43,12 +50,12 @@ class Hotel extends Model
         return $this->hasMany(HotelDistance::class, 'hotel_id', 'id');
     }
 
-    public function rooms()
-    {
-        return $this->hasMany(Room::class, 'hotel_id', 'id')
-            ->with("tools", "gallery")
-            ->select('*', DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/room/', image) ) ELSE '' END as image"));
-    }
+//    public function rooms()
+//    {
+//        return $this->hasMany(Room::class, 'hotel_id', 'id')
+//            ->with("tools", "gallery")
+//            ->select('*', DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/room/', image) ) ELSE '' END as image"));
+//    }
 
 
 }

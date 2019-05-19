@@ -28,13 +28,17 @@ class AppCheck
         }, $request->all());
         if (!$request->header('appToken'))
             throw new ApiException(
-                ApiException::EXCEPTION_BAD_REQUEST_400,
+                ApiException::EXCEPTION_UNAUTHORIZED_401,
                 'Plz check your appToken header'
             );
-        $appToken = JWT::decode($request->header('appToken'), config("jwt.secret"), array('HS256'));
+        if (!$request->header('Authorization'))
+            throw new ApiException(
+                ApiException::EXCEPTION_UNAUTHORIZED_401,
+                'Plz check your Authorization header'
+            );
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => env('CDN_AUTH_URL') . "/api/v1/apiChecker",
+            CURLOPT_URL => env('CDN_AUTH_URL') . "/api/v1/cp/supplier/app/checker",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -44,9 +48,9 @@ class AppCheck
             CURLOPT_POSTFIELDS => "",
             CURLOPT_HTTPHEADER => array(
                 "Accept: application/json",
-                "Postman-Token: 014f0d51-e8a3-4346-babd-9e6ea9e7aef2",
-                "cache-control: no-cache",
-                "apiId: " . $appToken->api_id
+                "Authorization: " . $request->header('Authorization'),
+                "appName: " . Constants::APP,
+                "appToken: " . $request->header('appToken')
             ),
         ));
         $response = curl_exec($curl);
@@ -63,6 +67,11 @@ class AppCheck
                 ApiException::EXCEPTION_BAD_REQUEST_400,
                 json_decode($response)->error
             );
+        $token = JWT::decode($request->header('appToken'), config("jwt.secret"), array('HS256'));
+        $input['apps_id'] = $token->apps_id;
+        $input['supplier_id'] = $token->supplier_id;
+        $input['user_id'] = $token->user_id;
+        $input['agent'] = $token->agent;
         $input['app_id'] = json_decode($response)->data->app_id;
         $request->replace($input);
         return $next($request);

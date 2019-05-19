@@ -18,15 +18,16 @@ if (App::environment() == "production")
 Route::middleware('app.check')->namespace('Api\V1')->prefix('/v1')->group(function () {
 
     //Site Before login
-    Route::namespace('Site')->prefix('/site')->group(function () {
+    Route::namespace('Supplier')->prefix('/supplier')->group(function () {
 
         //Hotel
         Route::resource('/hotel', 'HotelController');
 
-        //Room
-        Route::resource('{hotel_id}/room', 'RoomController');
 
     });
+
+    //Room
+//    Route::resource('{hotel_id}/room', 'RoomController');
 
 //    //Zarinpall Callback
 //    Route::any('storeProjectPaymentCallback', 'ProjectsController@storeProjectPaymentCallback')->name('project.payment.callback');

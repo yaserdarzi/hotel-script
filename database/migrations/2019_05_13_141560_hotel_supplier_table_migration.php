@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class HotelDistanceTableMigration extends Migration
+class HotelSupplierTableMigration extends Migration
 {
     /**
      * Run the migrations.
@@ -14,16 +14,15 @@ class HotelDistanceTableMigration extends Migration
      */
     public function up()
     {
-        Schema::create(Constants::HOTEL_DISTANCE_DB, function (Blueprint $table) {
+        Schema::create(Constants::HOTEL_SUPPLIER_DB, function (Blueprint $table) {
             $table->increments('id');
-            $table->bigInteger('type_app_id');
+            $table->bigInteger('app_id');
+            $table->bigInteger('supplier_id');
             $table->bigInteger('hotel_id');
-            $table->string('title');
-            $table->string('link')->nullable();
-            $table->string('distance');
-            $table->timestamp('created_at');
+            $table->json('info')->nullable();
+            $table->timestamps();
         });
-        Schema::table(Constants::HOTEL_DISTANCE_DB, function (Blueprint $table) {
+        Schema::table(Constants::HOTEL_SUPPLIER_DB, function (Blueprint $table) {
             $table->foreign('hotel_id')->references('id')->on(Constants::HOTEL_DB)->onDelete('cascade');
         });
     }
@@ -35,6 +34,6 @@ class HotelDistanceTableMigration extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(Constants::HOTEL_DISTANCE_DB);
+        Schema::dropIfExists(Constants::HOTEL_SUPPLIER_DB);
     }
 }
