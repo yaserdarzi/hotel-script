@@ -31,6 +31,7 @@ class HotelTableMigration extends Migration
             $table->json('terms_of_use')->nullable();
             $table->double('lat')->default(0);
             $table->double('long')->default(0);
+            $table->integer('sort')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

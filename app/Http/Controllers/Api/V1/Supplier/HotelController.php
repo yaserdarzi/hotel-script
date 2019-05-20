@@ -31,7 +31,11 @@ class HotelController extends ApiController
     public function index(Request $request)
     {
         $hotel = Hotel::where('app_id', $request->input('app_id'))
-            ->select('id', 'name')->get();
+            ->select(
+                'id',
+                'name',
+                DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/thumb/', logo) ) ELSE '' END as logo_thumb")
+            )->get();
         return $this->respond($hotel);
     }
 
@@ -61,12 +65,17 @@ class HotelController extends ApiController
         if (!$request->input('address'))
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
-                'کاربر گرامی ، وارد کردن ترتیب نشانی اجباری می باشد.'
+                'کاربر گرامی ، وارد کردن نشانی اجباری می باشد.'
             );
         if (!$request->input('star'))
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، وارد کردن ستاره اجباری می باشد.'
+            );
+        if (!$request->file('logo'))
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی ، وارد کردن لوگو اجباری می باشد.'
             );
         if (!in_array($request->file('logo')->getClientMimeType(), Constants::PHOTO_TYPE))
             throw new ApiException(
@@ -190,7 +199,7 @@ class HotelController extends ApiController
         if (!$request->input('address'))
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
-                'کاربر گرامی ، وارد کردن ترتیب نشانی اجباری می باشد.'
+                'کاربر گرامی ، وارد کردن نشانی اجباری می باشد.'
             );
         if (!$request->input('star'))
             throw new ApiException(

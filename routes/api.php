@@ -28,7 +28,8 @@ Route::middleware('app.check')->namespace('Api\V1')->prefix('/v1')->group(functi
         Route::resource('/hotel/{hotel_id}/gallery', 'HotelGalleryController');
 
         //Hotel Room
-        Route::resource('/hotel/{hotel_id}/room', 'HotelController');
+        Route::post('/hotel/{hotel_id}/room/update/{room_id}', 'RoomController@update');
+        Route::resource('/hotel/{hotel_id}/room', 'RoomController');
 
 
     });
@@ -39,7 +40,6 @@ Route::middleware('app.check')->namespace('Api\V1')->prefix('/v1')->group(functi
 //    //Zarinpall Callback
 //    Route::any('storeProjectPaymentCallback', 'ProjectsController@storeProjectPaymentCallback')->name('project.payment.callback');
 //
-
 
 
 //    //After Login

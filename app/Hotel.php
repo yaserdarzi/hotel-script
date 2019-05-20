@@ -20,7 +20,7 @@ class Hotel extends Model
         'app_id', 'name', 'logo', 'about', 'address',
         'star', 'count_floor', 'count_room', 'delivery_room',
         'discharge_room', 'global', 'possibilities',
-        'terms_of_use', 'lat', 'long'
+        'terms_of_use', 'lat', 'long', 'sort'
     ];
     protected $dates = ['deleted_at'];
 

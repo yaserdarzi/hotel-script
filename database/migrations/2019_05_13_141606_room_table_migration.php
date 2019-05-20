@@ -22,11 +22,11 @@ class RoomTableMigration extends Migration
             $table->string('image')->nullable();
             $table->longText('desc')->nullable();
             $table->bigInteger('capacity');
-            $table->integer('sort')->default(1);
             $table->string('bed')->nullable();
             $table->boolean('is_breakfast')->default(false);
             $table->boolean('is_lunch')->default(false);
             $table->boolean('is_dinner')->default(false);
+            $table->integer('sort')->default(1);
             $table->timestamps();
             $table->softDeletes();
 
