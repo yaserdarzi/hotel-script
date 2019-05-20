@@ -64,6 +64,11 @@ class HotelGalleryController extends ApiController
      */
     public function store($hotel_id, Request $request)
     {
+        if ($request->input('role')!=Constants::ROLE_ADMIN)
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی شما دسترسی به این قسمت ندارید.'
+            );
         if (!Hotel::where('app_id', $request->input('app_id'))->where(['id' => $hotel_id])->exists())
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
@@ -148,6 +153,11 @@ class HotelGalleryController extends ApiController
      */
     public function destroy($hotel_id, $id, Request $request)
     {
+        if ($request->input('role')!=Constants::ROLE_ADMIN)
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی شما دسترسی به این قسمت ندارید.'
+            );
         if (!Hotel::where('app_id', $request->input('app_id'))->where(['id' => $hotel_id])->exists())
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,

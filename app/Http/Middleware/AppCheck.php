@@ -67,11 +67,13 @@ class AppCheck
                 ApiException::EXCEPTION_BAD_REQUEST_400,
                 json_decode($response)->error
             );
-        $token = JWT::decode($request->header('appToken'), config("jwt.secret"), array('HS256'));
-        $input['apps_id'] = $token->apps_id;
-        $input['supplier_id'] = $token->supplier_id;
-        $input['user_id'] = $token->user_id;
-        $input['agent'] = $token->agent;
+        $tokenAuth = JWT::decode($request->header('Authorization'), config("jwt.secret"), array('HS256'));
+        $input['user_id'] = $tokenAuth->user_id;
+        $input['agent'] = $tokenAuth->agent;
+        $input['role'] = $tokenAuth->role;
+        $tokenApp = JWT::decode($request->header('appToken'), config("jwt.secret"), array('HS256'));
+        $input['apps_id'] = $tokenApp->apps_id;
+        $input['supplier_id'] = $tokenApp->supplier_id;
         $input['app_id'] = json_decode($response)->data->app_id;
         $request->replace($input);
         return $next($request);

@@ -57,6 +57,11 @@ class HotelController extends ApiController
      */
     public function store(Request $request)
     {
+        if ($request->input('role')!=Constants::ROLE_ADMIN)
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی شما دسترسی به این قسمت ندارید.'
+            );
         if (!$request->input('name'))
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
@@ -184,6 +189,11 @@ class HotelController extends ApiController
      */
     public function update(Request $request, $id)
     {
+        if ($request->input('role')!=Constants::ROLE_ADMIN)
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی شما دسترسی به این قسمت ندارید.'
+            );
         $hotelInfo = Hotel::where('app_id', $request->input('app_id'))
             ->where(['id' => $id])->first();
         if (!$hotelInfo)
@@ -278,6 +288,11 @@ class HotelController extends ApiController
      */
     public function destroy($id, Request $request)
     {
+        if ($request->input('role')!=Constants::ROLE_ADMIN)
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی شما دسترسی به این قسمت ندارید.'
+            );
         if (!Hotel::where('app_id', $request->input('app_id'))->where(['id' => $id])->exists())
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,

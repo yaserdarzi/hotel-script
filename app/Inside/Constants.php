@@ -8,6 +8,11 @@ class Constants
     //App
     Const APP = "hotel";
 
+    //Role
+    Const ROLE_ADMIN = "admin";
+    Const ROLE_SALES_MAN = "sales_man";
+    Const ROLE_COUNTER_MAN = "counter_man";
+
     //Database
     const HOTEL_DB = 'hotel';
     const HOTEL_SUPPLIER_DB = 'hotel_supplier';
