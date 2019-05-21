@@ -8,6 +8,12 @@ class Constants
     //App
     Const APP = "hotel";
 
+    //Status
+    const STATUS_PENDING = 'pending';
+    const STATUS_ACTIVE = 'active';
+    const STATUS_DEACTIVATE = 'deactivate';
+    const STATUS_RETURN_BUY = 'return_buy';
+
     //Role
     Const ROLE_ADMIN = "admin";
     Const ROLE_SALES_MAN = "sales_man";
@@ -21,9 +27,9 @@ class Constants
     const HOTEL_DISTANCE_DB = 'hotel_distance';
     const ROOM_DB = 'room';
     const ROOM_GALLERY_DB = 'room_gallery';
-    const ROOM_BOOKING_DB = 'room_booking';
-    const ROOM_BOOKING_USE_DB = 'room_booking_use';
     const ROOM_TOOLS_DB = 'room_tools';
+    const ROOM_EPISODE_DB = 'room_episode';
+
 
     //Extension Check File
     const PHOTO_TYPE = ["image/gif", "image/jpeg", "image/jpg", "image/png", "image/PNG", "image/GIF", 'image/*'];
@@ -37,6 +43,8 @@ class Constants
 
     //DataBaseName
 
+//    const ROOM_BOOKING_DB = 'room_booking';
+//    const ROOM_BOOKING_USE_DB = 'room_booking_use';
 //    const USERS_DB = 'users';
 //    const PASSWORD_RESETS_DB = 'password_resets';
 //    const USERS_LOGIN_TOKEN_DB = 'users_login_token';

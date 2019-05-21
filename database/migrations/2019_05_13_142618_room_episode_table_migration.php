@@ -1,0 +1,44 @@
+<?php
+
+use App\Inside\Constants;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class RoomEpisodeTableMigration extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create(Constants::ROOM_EPISODE_DB, function (Blueprint $table) {
+            $table->increments('id');
+            $table->bigInteger('app_id');
+            $table->bigInteger('room_id');
+            $table->bigInteger('supplier_id');
+            $table->bigInteger('capacity');
+            $table->bigInteger('price');
+            $table->string('type_percent');
+            $table->bigInteger('percent');
+            $table->timestamp('date');
+            $table->string('status')->default(Constants::STATUS_ACTIVE);
+            $table->timestamps();
+        });
+        Schema::table(Constants::ROOM_EPISODE_DB, function (Blueprint $table) {
+            $table->foreign('room_id')->references('id')->on(Constants::ROOM_DB)->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists(Constants::ROOM_EPISODE_DB);
+    }
+}
