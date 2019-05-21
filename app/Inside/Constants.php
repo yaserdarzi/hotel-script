@@ -31,6 +31,10 @@ class Constants
     const ROOM_EPISODE_DB = 'room_episode';
 
 
+    //Type Percent
+    const TYPE_PERCENT_PERCENT= "percent";
+    const TYPE_PERCENT_PRICE = "price";
+
     //Extension Check File
     const PHOTO_TYPE = ["image/gif", "image/jpeg", "image/jpg", "image/png", "image/PNG", "image/GIF", 'image/*'];
     const VIDEO_TYPE = ["video/x-flv", "video/mp4", "application/x-mpegURL", "video/MP2T", "video/3gpp", "video/quicktime",

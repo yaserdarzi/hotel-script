@@ -19,10 +19,10 @@ class RoomEpisodeTableMigration extends Migration
             $table->bigInteger('app_id');
             $table->bigInteger('room_id');
             $table->bigInteger('supplier_id');
-            $table->bigInteger('capacity');
-            $table->bigInteger('price');
-            $table->string('type_percent');
-            $table->bigInteger('percent');
+            $table->bigInteger('capacity')->default(1);
+            $table->bigInteger('price')->default(0);
+            $table->string('type_percent')->default(Constants::TYPE_PERCENT_PERCENT);
+            $table->bigInteger('percent')->default(0);
             $table->timestamp('date');
             $table->string('status')->default(Constants::STATUS_ACTIVE);
             $table->timestamps();
