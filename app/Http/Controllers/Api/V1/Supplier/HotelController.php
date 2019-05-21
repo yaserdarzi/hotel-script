@@ -30,9 +30,13 @@ class HotelController extends ApiController
      */
     public function index(Request $request)
     {
-        $hotel = Hotel::where('app_id', $request->input('app_id'))
+        $hotel = Hotel::join(Constants::HOTEL_SUPPLIER_DB, Constants::HOTEL_DB . '.id', '=', Constants::HOTEL_SUPPLIER_DB . 'hotel_id')
+            ->where([
+                'app_id' => $request->input('app_id'),
+                'supplier_id' => $request->input('supplier_id'),
+            ])
             ->select(
-                'id',
+                Constants::HOTEL_DB . '.id',
                 'name',
                 DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/thumb/', logo) ) ELSE '' END as logo_thumb")
             )->get();
@@ -57,7 +61,7 @@ class HotelController extends ApiController
      */
     public function store(Request $request)
     {
-        if ($request->input('role')!=Constants::ROLE_ADMIN)
+        if ($request->input('role') != Constants::ROLE_ADMIN)
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
@@ -189,7 +193,7 @@ class HotelController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        if ($request->input('role')!=Constants::ROLE_ADMIN)
+        if ($request->input('role') != Constants::ROLE_ADMIN)
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
@@ -288,7 +292,7 @@ class HotelController extends ApiController
      */
     public function destroy($id, Request $request)
     {
-        if ($request->input('role')!=Constants::ROLE_ADMIN)
+        if ($request->input('role') != Constants::ROLE_ADMIN)
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
