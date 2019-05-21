@@ -32,7 +32,8 @@ class HotelController extends ApiController
     {
         $hotel = Hotel::join(Constants::HOTEL_SUPPLIER_DB, Constants::HOTEL_DB . '.id', '=', Constants::HOTEL_SUPPLIER_DB . '.hotel_id')
             ->where([
-                'app_id' => $request->input('app_id'),
+                Constants::HOTEL_DB . '.app_id' => $request->input('app_id'),
+                Constants::HOTEL_SUPPLIER_DB . '.app_id' => $request->input('app_id'),
                 'supplier_id' => $request->input('supplier_id'),
             ])
             ->select(
