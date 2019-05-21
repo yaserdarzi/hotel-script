@@ -162,6 +162,11 @@ class HotelController extends ApiController
      */
     public function show(Request $request, $hotel_id)
     {
+        if (HotelSupplier::where(['supplier_id' => $request->input('supplier_id'), 'hotel_id' => $hotel_id])->exists())
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی شما دسترسی به این قسمت ندارید.'
+            );
         $hotel = Hotel::where('app_id', $request->input('app_id'))
             ->with("gallery")
             ->where(['id' => $hotel_id])
@@ -194,6 +199,11 @@ class HotelController extends ApiController
      */
     public function update(Request $request, $id)
     {
+        if (HotelSupplier::where(['supplier_id' => $request->input('supplier_id'), 'hotel_id' => $id])->exists())
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی شما دسترسی به این قسمت ندارید.'
+            );
         if ($request->input('role') != Constants::ROLE_ADMIN)
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
