@@ -342,10 +342,15 @@ class RoomEpisodeController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'plz check your id'
             );
-        if (!RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'hotel_id' => $hotel_id])->where('status', Constants::STATUS_ACTIVE)->exists())
+        if (!$roomEpisode = RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'hotel_id' => $hotel_id])->where('status', Constants::STATUS_ACTIVE)->first())
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
-                'کاربر گرامی ، امکان تغییر این سانس وجود ندارد.'
+                'کاربر گرامی ، امکان حذف این سانس وجود ندارد.'
+            );
+        if ($request->input('capacity') < $roomEpisode->capacity_filled)
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی ، امکان حذف این سانس وجود ندارد.'
             );
         RoomEpisode::where('id', $id)->delete();
         return $this->respond(["status" => "success"]);
