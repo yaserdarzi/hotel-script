@@ -12,8 +12,6 @@ use App\Room;
 use App\RoomEpisode;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use Illuminate\Support\Facades\DB;
-use Intervention\Image\Facades\Image;
 use Morilog\Jalali\Jalalian;
 use Morilog\Jalali\jDate;
 
@@ -60,6 +58,7 @@ class RoomEpisodeController extends ApiController
                 "room_id",
                 "supplier_id",
                 "capacity",
+                "capacity_filled",
                 "price",
                 "type_percent",
                 "percent",
@@ -195,6 +194,7 @@ class RoomEpisodeController extends ApiController
                 "room_id",
                 "supplier_id",
                 "capacity",
+                "capacity_filled",
                 "price",
                 "type_percent",
                 "percent",

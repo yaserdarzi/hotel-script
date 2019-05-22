@@ -15,10 +15,10 @@ use Illuminate\Http\Request;
 if (App::environment() == "production")
     \URL::forceScheme('https');
 
-Route::middleware('app.check')->namespace('Api\V1')->prefix('/v1')->group(function () {
+Route::namespace('Api\V1')->prefix('/v1')->group(function () {
 
-    //Site Before login
-    Route::namespace('Supplier')->prefix('/supplier')->group(function () {
+    //Site After login
+    Route::middleware('app.supplier.check')->namespace('Supplier')->prefix('/supplier')->group(function () {
 
         //Hotel
         Route::post('/hotel/update/{hotel_id}', 'HotelController@update');
@@ -38,41 +38,14 @@ Route::middleware('app.check')->namespace('Api\V1')->prefix('/v1')->group(functi
 
     });
 
-    //Room
-//    Route::resource('{hotel_id}/room', 'RoomController');
+    //Site After login
+    Route::middleware('app.agency.check')->namespace('Agency')->prefix('/agency')->group(function () {
 
-//    //Zarinpall Callback
-//    Route::any('storeProjectPaymentCallback', 'ProjectsController@storeProjectPaymentCallback')->name('project.payment.callback');
-//
+        //Reservation
+        Route::get('/reservation', 'ReservationController@index');
 
 
-//    //After Login
-//    Route::middleware('users.authenticate')->group(function () {
-//
-//        //Users
-//        Route::get('/profile/init', 'UsersController@index');
-//        Route::post('/profile/update', 'UsersController@update');
-//
-//        //Category
-//        Route::get('/category', 'CategoryController@index');
-//
-//        //Category Plan
-//        Route::get('category/{category_id}/plan', 'CategoryPlanController@index');
-//
-//        //Category Timing
-//        Route::get('category/{category_id}/timing', 'CategoryTimingController@index');
-//
-//        //Invoice
-//        Route::resource('/invoice', 'InvoiceController', ['only' => ['index']]);
-//
-//        //Only Customer
-//        Route::middleware('users.customer.authenticate')->group(function () {
-//
-//            //project
-//            Route::post('/projects/invoice', 'ProjectsController@projectInvoice');
-//            Route::resource('/projects', 'ProjectsController', ['only' => ['index', 'store', 'show']]);
-//
-//        });
-//    });
+    });
+
 });
 
