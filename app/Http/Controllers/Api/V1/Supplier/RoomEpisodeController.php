@@ -12,6 +12,7 @@ use App\Room;
 use App\RoomEpisode;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Morilog\Jalali\CalendarUtils;
 use Morilog\Jalali\Jalalian;
 use Morilog\Jalali\jDate;
 
@@ -65,7 +66,10 @@ class RoomEpisodeController extends ApiController
                 "percent",
                 "date",
                 "status"
-            )->get();
+            )->get()->map(function ($value) {
+                $value->date_persian = CalendarUtils::strftime('Y-m-d', strtotime($value->date));
+                return $value;
+            });
         return $this->respond($roomEpisode);
     }
 
@@ -204,6 +208,7 @@ class RoomEpisodeController extends ApiController
                 "date",
                 "status"
             )->first();
+        $roomEpisode->date_persian = CalendarUtils::strftime('Y-m-d', strtotime($roomEpisode->date));
         return $this->respond($roomEpisode);
     }
 
