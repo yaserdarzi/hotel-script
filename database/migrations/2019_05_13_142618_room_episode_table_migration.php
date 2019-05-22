@@ -17,6 +17,7 @@ class RoomEpisodeTableMigration extends Migration
         Schema::create(Constants::ROOM_EPISODE_DB, function (Blueprint $table) {
             $table->increments('id');
             $table->bigInteger('app_id');
+            $table->bigInteger('hotel_id');
             $table->bigInteger('room_id');
             $table->bigInteger('supplier_id');
             $table->bigInteger('capacity')->default(1);
@@ -28,6 +29,7 @@ class RoomEpisodeTableMigration extends Migration
             $table->timestamps();
         });
         Schema::table(Constants::ROOM_EPISODE_DB, function (Blueprint $table) {
+            $table->foreign('hotel_id')->references('id')->on(Constants::HOTEL_DB)->onDelete('cascade');
             $table->foreign('room_id')->references('id')->on(Constants::ROOM_DB)->onDelete('cascade');
         });
     }

@@ -5,6 +5,12 @@ namespace App\Inside;
 
 class Helpers
 {
+    public function priceNumberDigitsToNormal($price)
+    {
+        $price = str_replace(',', '', $price);
+        return $this->normalizePhoneNumber($price);
+    }
+
     public function phoneChecker($phone, $country)
     {
         if (!$country)
