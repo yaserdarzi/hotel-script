@@ -22,6 +22,7 @@ class RoomEpisodeTableMigration extends Migration
             $table->bigInteger('supplier_id');
             $table->bigInteger('capacity')->default(1);
             $table->bigInteger('capacity_filled')->default(0);
+            $table->bigInteger('capacity_remaining')->default(1);
             $table->bigInteger('price')->default(0);
             $table->string('type_percent')->default(Constants::TYPE_PERCENT_PERCENT);
             $table->bigInteger('percent')->default(0);

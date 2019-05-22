@@ -59,6 +59,7 @@ class RoomEpisodeController extends ApiController
                 "supplier_id",
                 "capacity",
                 "capacity_filled",
+                "capacity_remaining",
                 "price",
                 "type_percent",
                 "percent",
@@ -152,6 +153,7 @@ class RoomEpisodeController extends ApiController
                 'room_id' => $request->input('room_id'),
                 'supplier_id' => $request->input('supplier_id'),
                 'capacity' => $request->input('capacity'),
+                'capacity_remaining' => $request->input('capacity'),
                 'price' => $this->help->priceNumberDigitsToNormal($request->input('price')),
                 'type_percent' => $typePercent,
                 'percent' => $request->input('percent'),
@@ -195,6 +197,7 @@ class RoomEpisodeController extends ApiController
                 "supplier_id",
                 "capacity",
                 "capacity_filled",
+                "capacity_remaining",
                 "price",
                 "type_percent",
                 "percent",
@@ -244,7 +247,7 @@ class RoomEpisodeController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'plz check your id'
             );
-        if (!RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'hotel_id' => $hotel_id])->where('status', Constants::STATUS_ACTIVE)->exists())
+        if (!$roomEpisode = RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'hotel_id' => $hotel_id])->where('status', Constants::STATUS_ACTIVE)->first())
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، امکان تغییر این سانس وجود ندارد.'
@@ -292,6 +295,11 @@ class RoomEpisodeController extends ApiController
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، وارد کردن تاریخ اجباری می باشد.'
+            );
+        if ($request->input('capacity') < $roomEpisode->capacity_filled)
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی ، امکان کم کردن ظرفیت وجود ندارد.'
             );
         $date = \Morilog\Jalali\CalendarUtils::toGregorian(Jalalian::forge($request->input('date'))->getYear(), Jalalian::forge($request->input('date'))->getMonth(), Jalalian::forge($request->input('date'))->getDay());
         $date = date_create(date('Y-m-d', strtotime($date[0] . '-' . $date[1] . '-' . $date[2])));
