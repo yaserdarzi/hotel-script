@@ -51,7 +51,7 @@ class RoomEpisodeController extends ApiController
         $date = date('Y-m-d', strtotime($date[0] . '-' . $date[1] . '-' . $date[2]));
         $roomEpisode = RoomEpisode::where('app_id', $request->input('app_id'))
             ->with('room')
-            ->where(['hotel_id' => $hotel_id, 'date' => $date])
+            ->where(['hotel_id' => $hotel_id, 'supplier_id' => $request->input('supplier_id'), 'date' => $date])
             ->select(
                 "id",
                 "app_id",
@@ -185,14 +185,14 @@ class RoomEpisodeController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'plz check your hotel_id'
             );
-        if (!RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'hotel_id' => $hotel_id])->exists())
+        if (!RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'supplier_id' => $request->input('supplier_id'), 'hotel_id' => $hotel_id])->exists())
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'plz check your id'
             );
         $roomEpisode = RoomEpisode::where('app_id', $request->input('app_id'))
             ->with('room')
-            ->where(['hotel_id' => $hotel_id, 'id' => $id])
+            ->where(['hotel_id' => $hotel_id, 'supplier_id' => $request->input('supplier_id'), 'id' => $id])
             ->select(
                 "id",
                 "app_id",
@@ -247,12 +247,12 @@ class RoomEpisodeController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'plz check your hotel_id'
             );
-        if (!RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'hotel_id' => $hotel_id])->exists())
+        if (!RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'supplier_id' => $request->input('supplier_id'), 'hotel_id' => $hotel_id])->exists())
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'plz check your id'
             );
-        if (!$roomEpisode = RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'hotel_id' => $hotel_id])->where('status', Constants::STATUS_ACTIVE)->first())
+        if (!$roomEpisode = RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'supplier_id' => $request->input('supplier_id'), 'hotel_id' => $hotel_id])->where('status', Constants::STATUS_ACTIVE)->first())
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، امکان تغییر این سانس وجود ندارد.'
@@ -342,12 +342,12 @@ class RoomEpisodeController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'plz check your hotel_id'
             );
-        if (!RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'hotel_id' => $hotel_id])->exists())
+        if (!RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'supplier_id' => $request->input('supplier_id'), 'hotel_id' => $hotel_id])->exists())
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'plz check your id'
             );
-        if (!$roomEpisode = RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'hotel_id' => $hotel_id])->where('status', Constants::STATUS_ACTIVE)->first())
+        if (!$roomEpisode = RoomEpisode::where('app_id', $request->input('app_id'))->where(['id' => $id, 'supplier_id' => $request->input('supplier_id'), 'hotel_id' => $hotel_id])->where('status', Constants::STATUS_ACTIVE)->first())
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، امکان حذف این سانس وجود ندارد.'
