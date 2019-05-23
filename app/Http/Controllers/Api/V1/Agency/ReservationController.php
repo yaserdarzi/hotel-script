@@ -9,6 +9,7 @@ use App\Inside\Helpers;
 use App\RoomEpisode;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Morilog\Jalali\CalendarUtils;
 use Morilog\Jalali\Jalalian;
 use Morilog\Jalali\jDate;
 
@@ -90,7 +91,10 @@ class ReservationController extends ApiController
                 "percent",
                 "date",
                 "status"
-            )->get();
+            )->get()->map(function ($value) {
+                $value->date_persian = CalendarUtils::strftime('Y-m-d', strtotime($value->date));
+                return $value;
+            });
         return $this->respond($roomEpisode);
     }
 
