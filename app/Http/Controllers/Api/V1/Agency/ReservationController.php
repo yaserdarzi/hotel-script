@@ -28,6 +28,35 @@ class ReservationController extends ApiController
      */
     public function index(Request $request)
     {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => env('CDN_AUTH_URL') . "/api/v1/app/get/supplier/active/sales",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_POSTFIELDS => "",
+            CURLOPT_HTTPHEADER => array(
+                "Accept: application/json",
+                "sales: agency"
+            ),
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        $info = curl_getinfo($curl);
+        curl_close($curl);
+        if ($err)
+            throw new ApiException(
+                ApiException::EXCEPTION_BAD_REQUEST_400,
+                $err
+            );
+        if ($info['http_code'] != 200)
+            throw new ApiException(
+                ApiException::EXCEPTION_BAD_REQUEST_400,
+                json_decode($response)->error
+            );
         if (!$request->input('start_date'))
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
@@ -44,6 +73,7 @@ class ReservationController extends ApiController
         $endDay = date('Y-m-d', strtotime($end_date[0] . '-' . $end_date[1] . '-' . $end_date[2]));
         $roomEpisode = RoomEpisode::where('app_id', $request->input('app_id'))
             ->with('hotel', 'room')
+            ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
             ->where(['status' => Constants::STATUS_ACTIVE])
             ->whereBetween('date', [$startDay, $endDay])
             ->select(
@@ -54,6 +84,7 @@ class ReservationController extends ApiController
                 "supplier_id",
                 "capacity",
                 "capacity_filled",
+                "capacity_remaining",
                 "price",
                 "type_percent",
                 "percent",
