@@ -31,7 +31,7 @@ class HotelGalleryController extends ApiController
      */
     public function index($hotel_id, Request $request)
     {
-        if (HotelSupplier::where(['supplier_id' => $request->input('supplier_id'), 'hotel_id' => $hotel_id])->exists())
+        if (!HotelSupplier::where(['supplier_id' => $request->input('supplier_id'), 'hotel_id' => $hotel_id])->exists())
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
@@ -75,7 +75,7 @@ class HotelGalleryController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
             );
-        if ($request->input('role')!=Constants::ROLE_ADMIN)
+        if ($request->input('role') != Constants::ROLE_ADMIN)
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
@@ -169,7 +169,7 @@ class HotelGalleryController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
             );
-        if ($request->input('role')!=Constants::ROLE_ADMIN)
+        if ($request->input('role') != Constants::ROLE_ADMIN)
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'

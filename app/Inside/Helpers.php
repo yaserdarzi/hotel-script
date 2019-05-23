@@ -11,17 +11,6 @@ class Helpers
         return $this->normalizePhoneNumber($price);
     }
 
-    public function phoneChecker($phone, $country)
-    {
-        if (!$country)
-            $country = "IR";
-        $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
-        $phoneNumber = $phoneUtil->parse($phone, $country);
-        $phone = $phoneUtil->format($phoneNumber, \libphonenumber\PhoneNumberFormat::E164);
-        $phone = str_replace('+', '', $phone);
-        return $this->normalizePhoneNumber($phone);
-    }
-
     public function normalizePhoneNumber($phone)
     {
         $newNumbers = range(0, 9);
