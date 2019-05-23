@@ -68,29 +68,38 @@ class ReservationController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، وارد کردن تاریخ پایان اجباری می باشد.'
             );
+        if (!$request->input('capacity'))
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی ، وارد کردن تعداد مهمان اجباری می باشد.'
+            );
         $start_date = \Morilog\Jalali\CalendarUtils::toGregorian(Jalalian::forge($request->input('start_date'))->getYear(), Jalalian::forge($request->input('start_date'))->getMonth(), Jalalian::forge($request->input('start_date'))->getDay());
         $end_date = \Morilog\Jalali\CalendarUtils::toGregorian(Jalalian::forge($request->input('end_date'))->getYear(), Jalalian::forge($request->input('end_date'))->getMonth(), Jalalian::forge($request->input('end_date'))->getDay());
         $startDay = date('Y-m-d', strtotime($start_date[0] . '-' . $start_date[1] . '-' . $start_date[2]));
         $endDay = date('Y-m-d', strtotime($end_date[0] . '-' . $end_date[1] . '-' . $end_date[2]));
-        $roomEpisode = RoomEpisode::where('app_id', $request->input('app_id'))
+        $roomEpisode = RoomEpisode::
+        join(Constants::ROOM_DB, Constants::ROOM_EPISODE_DB . '.room_id', '=', Constants::ROOM_DB . '.id')
+            ->where(Constants::ROOM_EPISODE_DB . '.app_id', $request->input('app_id'))
             ->with('hotel', 'room')
-            ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
-            ->where(['status' => Constants::STATUS_ACTIVE])
-            ->whereBetween('date', [$startDay, $endDay])
+            ->whereIn(Constants::ROOM_EPISODE_DB . '.supplier_id', json_decode($response)->data->supplier_id)
+            ->where([Constants::ROOM_EPISODE_DB . '.status' => Constants::STATUS_ACTIVE])
+            ->where(Constants::ROOM_DB . '.capacity', '>=', $request->input('capacity'))
+            ->whereBetween(Constants::ROOM_EPISODE_DB . '.date', [$startDay, $endDay])
             ->select(
-                "id",
-                "app_id",
-                "hotel_id",
-                "room_id",
-                "supplier_id",
-                "capacity",
-                "capacity_filled",
-                "capacity_remaining",
-                "price",
-                "type_percent",
-                "percent",
-                "date",
-                "status"
+                Constants::ROOM_EPISODE_DB . ".id",
+                Constants::ROOM_EPISODE_DB . ".app_id",
+                Constants::ROOM_EPISODE_DB . ".hotel_id",
+                Constants::ROOM_EPISODE_DB . ".room_id",
+                Constants::ROOM_EPISODE_DB . ".supplier_id",
+                Constants::ROOM_DB . ".capacity as room_capacity",
+                Constants::ROOM_EPISODE_DB . ".capacity",
+                Constants::ROOM_EPISODE_DB . ".capacity_filled",
+                Constants::ROOM_EPISODE_DB . ".capacity_remaining",
+                Constants::ROOM_EPISODE_DB . ".price",
+                Constants::ROOM_EPISODE_DB . ".type_percent",
+                Constants::ROOM_EPISODE_DB . ".percent",
+                Constants::ROOM_EPISODE_DB . ".date",
+                Constants::ROOM_EPISODE_DB . ".status"
             )->get()->map(function ($value) {
                 $value->date_persian = CalendarUtils::strftime('Y-m-d', strtotime($value->date));
                 return $value;
