@@ -70,11 +70,6 @@ class ReservationController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، وارد کردن تاریخ پایان اجباری می باشد.'
             );
-        if (!$request->input('capacity'))
-            throw new ApiException(
-                ApiException::EXCEPTION_NOT_FOUND_404,
-                'کاربر گرامی ، وارد کردن تعداد مهمان اجباری می باشد.'
-            );
         $start_date = \Morilog\Jalali\CalendarUtils::toGregorian(Jalalian::forge($request->input('start_date'))->getYear(), Jalalian::forge($request->input('start_date'))->getMonth(), Jalalian::forge($request->input('start_date'))->getDay());
         $end_date = \Morilog\Jalali\CalendarUtils::toGregorian(Jalalian::forge($request->input('end_date'))->getYear(), Jalalian::forge($request->input('end_date'))->getMonth(), Jalalian::forge($request->input('end_date'))->getDay());
         $startDay = date_create(date('Y-m-d', strtotime($start_date[0] . '-' . $start_date[1] . '-' . $start_date[2])));
@@ -84,7 +79,6 @@ class ReservationController extends ApiController
         where('app_id', $request->input('app_id'))
             ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
             ->where(['status' => Constants::STATUS_ACTIVE])
-            ->where('capacity', '>=', $request->input('capacity'))
             ->where('capacity_remaining', '>', 0)
             ->whereBetween('date', [$startDay, $endDay])
             ->groupBy('room_id')
@@ -122,22 +116,34 @@ class ReservationController extends ApiController
                     'status' => Constants::STATUS_ACTIVE,
                     'room_id' => $value->id
                 ])
-                ->where('capacity', '>=', $request->input('capacity'))
                 ->where('capacity_remaining', '>', 0)
                 ->whereBetween('date', [$startDay, $endDay])
                 ->sum('price');
-            $value->percent = RoomEpisode::
+            $value->percent_p = RoomEpisode::
             where('app_id', $request->input('app_id'))
                 ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
                 ->where([
                     'status' => Constants::STATUS_ACTIVE,
-                    'room_id' => $value->id
+                    'room_id' => $value->id,
+                    'type_percent' => Constants::TYPE_PERCENT_PRICE
                 ])
-                ->where('capacity', '>=', $request->input('capacity'))
                 ->where('capacity_remaining', '>', 0)
                 ->whereBetween('date', [$startDay, $endDay])
                 ->sum('percent');
-            $value->price_percent = $value->price - $value->percent;
+            $value->price_percent = $value->price - $value->percent_p;
+//            $percent = RoomEpisode::
+//            where('app_id', $request->input('app_id'))
+//                ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
+//                ->where([
+//                    'status' => Constants::STATUS_ACTIVE,
+//                    'room_id' => $value->id,
+//                    'type_percent' => Constants::TYPE_PERCENT_PERCENT
+//                ])
+//                ->where('capacity_remaining', '>', 0)
+//                ->whereBetween('date', [$startDay, $endDay])
+//                ->sum('percent');
+
+
         }
         return $this->respond($rooms);
     }
