@@ -65,34 +65,36 @@ class ReservationController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، وارد کردن تاریخ شروع اجباری می باشد.'
             );
-        $start_date = \Morilog\Jalali\CalendarUtils::toGregorian(Jalalian::forge($request->input('start_date'))->getYear(), Jalalian::forge($request->input('start_date'))->getMonth(), Jalalian::forge($request->input('start_date'))->getDay());
-        $end_date = \Morilog\Jalali\CalendarUtils::toGregorian(Jalalian::forge($request->input('end_date'))->getYear(), Jalalian::forge($request->input('end_date'))->getMonth(), Jalalian::forge($request->input('end_date'))->getDay());
+        $startExplode = explode('/', $request->input('start_date'));
+        $endExplode = explode('/', $request->input('end_date'));
+        $start_date = \Morilog\Jalali\CalendarUtils::toGregorian($startExplode[0], $startExplode[1], $startExplode[2]);
+        $end_date = \Morilog\Jalali\CalendarUtils::toGregorian($endExplode[0], $endExplode[1], $endExplode[2]);
         $startDay = date_create(date('Y-m-d', strtotime($start_date[0] . '-' . $start_date[1] . '-' . $start_date[2])));
         $endDay = date_create(date('Y-m-d', strtotime($end_date[0] . '-' . $end_date[1] . '-' . $end_date[2])));
         $diff = date_diff($startDay, $endDay);
-        $roomId = RoomEpisode::
-        where('app_id', $request->input('app_id'))
-            ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
-            ->where(['status' => Constants::STATUS_ACTIVE])
-            ->where('capacity_remaining', '>', 0)
-            ->whereBetween('date', [$startDay, $endDay])
-            ->groupBy('room_id')
-            ->pluck('room_id');
-        $roomId = $roomId->toArray();
+        $roomId = [];
         for ($i = 0; $i <= $diff->days; $i++) {
             $date = strtotime(date('Y-m-d', strtotime($startDay->format('Y-m-d') . " +" . $i . " days")));
-            $roomEpisode = RoomEpisode::where('app_id', $request->input('app_id'))
+            $roomToday = RoomEpisode::
+            where('app_id', $request->input('app_id'))
                 ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
                 ->where([
                     'status' => Constants::STATUS_ACTIVE,
                     'date' => date('Y-m-d', $date)
                 ])
-                ->where('capacity_remaining', 0)
+                ->where('capacity_remaining', '>', 0)
                 ->groupBy('room_id')
                 ->pluck('room_id');
-            $roomId = array_diff($roomId, $roomEpisode->toArray());
+            if (!sizeof($roomToday)) {
+                $roomId = [];
+                break;
+            }
+            if ($i == 0)
+                $roomId = array_merge($roomId, $roomToday->toArray());
+            else {
+                $roomId = array_intersect($roomId, $roomToday->toArray());
+            }
         }
-
         $rooms = Room::where('app_id', $request->input('app_id'))
             ->with('hotel')
             ->whereIn('id', $roomId)
@@ -102,7 +104,6 @@ class ReservationController extends ApiController
                 DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/thumb/', image) ) ELSE '' END as image_thumb")
             )
             ->get();
-
         foreach ($rooms as $key => $value) {
             $value->price = RoomEpisode::
             where('app_id', $request->input('app_id'))
@@ -143,7 +144,7 @@ class ReservationController extends ApiController
                 foreach ($percent as $valPercent) {
                     $floatPercent = floatval("0." . $valPercent->percent);
                     $percentPercent = $percentPercent + ($valPercent->price * $floatPercent);
-                    $pricePercent = $pricePercent + ($valPercent->price-intval($percentPercent));
+                    $pricePercent = $pricePercent + ($valPercent->price - intval($percentPercent));
                 }
             }
             $value->percent = $value->percent + $percentPercent;
