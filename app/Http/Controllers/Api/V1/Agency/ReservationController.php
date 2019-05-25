@@ -114,7 +114,7 @@ class ReservationController extends ApiController
                 ->where('capacity_remaining', '>', 0)
                 ->whereBetween('date', [$startDay, $endDay])
                 ->sum('price');
-            $value->percent_p = RoomEpisode::
+            $value->percent = RoomEpisode::
             where('app_id', $request->input('app_id'))
                 ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
                 ->where([
@@ -125,20 +125,29 @@ class ReservationController extends ApiController
                 ->where('capacity_remaining', '>', 0)
                 ->whereBetween('date', [$startDay, $endDay])
                 ->sum('percent');
-            $value->price_percent = $value->price - $value->percent_p;
-//            $percent = RoomEpisode::
-//            where('app_id', $request->input('app_id'))
-//                ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
-//                ->where([
-//                    'status' => Constants::STATUS_ACTIVE,
-//                    'room_id' => $value->id,
-//                    'type_percent' => Constants::TYPE_PERCENT_PERCENT
-//                ])
-//                ->where('capacity_remaining', '>', 0)
-//                ->whereBetween('date', [$startDay, $endDay])
-//                ->sum('percent');
-
-
+            $value->price_percent = $value->price - $value->percent;
+            $percent = RoomEpisode::
+            where('app_id', $request->input('app_id'))
+                ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
+                ->where([
+                    'status' => Constants::STATUS_ACTIVE,
+                    'room_id' => $value->id,
+                    'type_percent' => Constants::TYPE_PERCENT_PERCENT
+                ])
+                ->where('capacity_remaining', '>', 0)
+                ->whereBetween('date', [$startDay, $endDay])
+                ->get();
+            $pricePercent = 0;
+            $percentPercent = 0;
+            if (sizeof($percent)) {
+                foreach ($percent as $valPercent) {
+                    $floatPercent = floatval("0." . $valPercent->percent);
+                    $percentPercent = $percentPercent + ($valPercent->price * $floatPercent);
+                    $pricePercent = $pricePercent + ($valPercent->price-intval($percentPercent));
+                }
+            }
+            $value->percent = $value->percent + $percentPercent;
+            $value->price_percent = $value->price_percent + $pricePercent;
         }
         return $this->respond($rooms);
     }
