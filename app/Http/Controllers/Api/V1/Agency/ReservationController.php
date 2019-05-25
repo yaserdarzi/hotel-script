@@ -6,9 +6,11 @@ use App\Exceptions\ApiException;
 use App\Http\Controllers\ApiController;
 use App\Inside\Constants;
 use App\Inside\Helpers;
+use App\Room;
 use App\RoomEpisode;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\CalendarUtils;
 use Morilog\Jalali\Jalalian;
 use Morilog\Jalali\jDate;
@@ -75,36 +77,69 @@ class ReservationController extends ApiController
             );
         $start_date = \Morilog\Jalali\CalendarUtils::toGregorian(Jalalian::forge($request->input('start_date'))->getYear(), Jalalian::forge($request->input('start_date'))->getMonth(), Jalalian::forge($request->input('start_date'))->getDay());
         $end_date = \Morilog\Jalali\CalendarUtils::toGregorian(Jalalian::forge($request->input('end_date'))->getYear(), Jalalian::forge($request->input('end_date'))->getMonth(), Jalalian::forge($request->input('end_date'))->getDay());
-        $startDay = date('Y-m-d', strtotime($start_date[0] . '-' . $start_date[1] . '-' . $start_date[2]));
-        $endDay = date('Y-m-d', strtotime($end_date[0] . '-' . $end_date[1] . '-' . $end_date[2]));
-        $roomEpisode = RoomEpisode::
-        join(Constants::ROOM_DB, Constants::ROOM_EPISODE_DB . '.room_id', '=', Constants::ROOM_DB . '.id')
-            ->where(Constants::ROOM_EPISODE_DB . '.app_id', $request->input('app_id'))
-            ->with('hotel', 'room')
-            ->whereIn(Constants::ROOM_EPISODE_DB . '.supplier_id', json_decode($response)->data->supplier_id)
-            ->where([Constants::ROOM_EPISODE_DB . '.status' => Constants::STATUS_ACTIVE])
-            ->where(Constants::ROOM_DB . '.capacity', '>=', $request->input('capacity'))
-            ->whereBetween(Constants::ROOM_EPISODE_DB . '.date', [$startDay, $endDay])
+        $startDay = date_create(date('Y-m-d', strtotime($start_date[0] . '-' . $start_date[1] . '-' . $start_date[2])));
+        $endDay = date_create(date('Y-m-d', strtotime($end_date[0] . '-' . $end_date[1] . '-' . $end_date[2])));
+        $diff = date_diff($startDay, $endDay);
+        $roomId = RoomEpisode::
+        where('app_id', $request->input('app_id'))
+            ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
+            ->where(['status' => Constants::STATUS_ACTIVE])
+            ->where('capacity', '>=', $request->input('capacity'))
+            ->where('capacity_remaining', '>', 0)
+            ->whereBetween('date', [$startDay, $endDay])
+            ->groupBy('room_id')
+            ->pluck('room_id');
+        $roomId = $roomId->toArray();
+        for ($i = 0; $i <= $diff->days; $i++) {
+            $date = strtotime(date('Y-m-d', strtotime($startDay->format('Y-m-d') . " +" . $i . " days")));
+            $roomEpisode = RoomEpisode::where('app_id', $request->input('app_id'))
+                ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
+                ->where([
+                    'status' => Constants::STATUS_ACTIVE,
+                    'date' => date('Y-m-d', $date)
+                ])
+                ->where('capacity_remaining', 0)
+                ->groupBy('room_id')
+                ->pluck('room_id');
+            $roomId = array_diff($roomId, $roomEpisode->toArray());
+        }
+
+        $rooms = Room::where('app_id', $request->input('app_id'))
+            ->with('hotel')
+            ->whereIn('id', $roomId)
             ->select(
-                Constants::ROOM_EPISODE_DB . ".id",
-                Constants::ROOM_EPISODE_DB . ".app_id",
-                Constants::ROOM_EPISODE_DB . ".hotel_id",
-                Constants::ROOM_EPISODE_DB . ".room_id",
-                Constants::ROOM_EPISODE_DB . ".supplier_id",
-                Constants::ROOM_DB . ".capacity as room_capacity",
-                Constants::ROOM_EPISODE_DB . ".capacity",
-                Constants::ROOM_EPISODE_DB . ".capacity_filled",
-                Constants::ROOM_EPISODE_DB . ".capacity_remaining",
-                Constants::ROOM_EPISODE_DB . ".price",
-                Constants::ROOM_EPISODE_DB . ".type_percent",
-                Constants::ROOM_EPISODE_DB . ".percent",
-                Constants::ROOM_EPISODE_DB . ".date",
-                Constants::ROOM_EPISODE_DB . ".status"
-            )->get()->map(function ($value) {
-                $value->date_persian = CalendarUtils::strftime('Y-m-d', strtotime($value->date));
-                return $value;
-            });
-        return $this->respond($roomEpisode);
+                '*',
+                DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/', image) ) ELSE '' END as image"),
+                DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/thumb/', image) ) ELSE '' END as image_thumb")
+            )
+            ->get();
+
+        foreach ($rooms as $key => $value) {
+            $value->price = RoomEpisode::
+            where('app_id', $request->input('app_id'))
+                ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
+                ->where([
+                    'status' => Constants::STATUS_ACTIVE,
+                    'room_id' => $value->id
+                ])
+                ->where('capacity', '>=', $request->input('capacity'))
+                ->where('capacity_remaining', '>', 0)
+                ->whereBetween('date', [$startDay, $endDay])
+                ->sum('price');
+            $value->percent = RoomEpisode::
+            where('app_id', $request->input('app_id'))
+                ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
+                ->where([
+                    'status' => Constants::STATUS_ACTIVE,
+                    'room_id' => $value->id
+                ])
+                ->where('capacity', '>=', $request->input('capacity'))
+                ->where('capacity_remaining', '>', 0)
+                ->whereBetween('date', [$startDay, $endDay])
+                ->sum('percent');
+            $value->price_percent = $value->price - $value->percent;
+        }
+        return $this->respond($rooms);
     }
 
     /**

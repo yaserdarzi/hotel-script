@@ -17,6 +17,17 @@ class Room extends Model
     ];
     protected $dates = ['deleted_at'];
 
+    public function hotel()
+    {
+        return $this->hasOne(Hotel::class, 'id', 'hotel_id')
+            ->select(
+                'id',
+                'name',
+                DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/thumb/', logo) ) ELSE '' END as logo_thumb")
+            )
+            ->where('deleted_at', null);
+    }
+
     public function gallery()
     {
         return $this->hasMany(RoomGallery::class, 'room_id', 'id')
