@@ -144,6 +144,8 @@ class HotelController extends ApiController
             'count_room' => $request->input('count_room'),
             'delivery_room' => $request->input('delivery_room'),
             'discharge_room' => $request->input('discharge_room'),
+            'rule' => $request->input('rule'),
+            'recovery' => $request->input('recovery'),
             'about' => $request->input('about'),
         ]);
         HotelSupplier::create([
@@ -290,6 +292,8 @@ class HotelController extends ApiController
             'count_room' => $request->input('count_room'),
             'delivery_room' => $request->input('delivery_room'),
             'discharge_room' => $request->input('discharge_room'),
+            'rule' => $request->input('rule'),
+            'recovery' => $request->input('recovery'),
             'about' => $request->input('about'),
         ]);
         return $this->respond(["status" => "success"]);
