@@ -43,7 +43,9 @@ class ReservationController extends ApiController
             CURLOPT_POSTFIELDS => "",
             CURLOPT_HTTPHEADER => array(
                 "Accept: application/json",
-                "sales: agency"
+                "sales: agency",
+                "Authorization: " . $request->header('Authorization'),
+                "appToken: " . $request->header('appToken')
             ),
         ));
         $response = curl_exec($curl);
@@ -73,7 +75,12 @@ class ReservationController extends ApiController
         $endDay = date_create(date('Y-m-d', strtotime($end_date[0] . '-' . $end_date[1] . '-' . $end_date[2])));
         $diff = date_diff($startDay, $endDay);
         $roomId = [];
-        $supplierID = json_decode($response)->data->supplier_sales;
+        $supplierID = array_unique(
+            array_merge(
+                json_decode($response)->data->supplier_sales,
+                json_decode($response)->data->supplier_agency
+            )
+        );
         for ($i = 0; $i <= $diff->days; $i++) {
             $date = strtotime(date('Y-m-d', strtotime($startDay->format('Y-m-d') . " +" . $i . " days")));
             $roomToday = RoomEpisode::
