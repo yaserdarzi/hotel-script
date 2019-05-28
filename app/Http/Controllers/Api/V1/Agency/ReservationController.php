@@ -33,7 +33,7 @@ class ReservationController extends ApiController
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => env('CDN_AUTH_URL') . "/api/v1/app/get/supplier/active/sales",
+            CURLOPT_URL => env('CDN_AUTH_URL') . "/api/v1/cp/agency/app/get/supplier",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -73,11 +73,12 @@ class ReservationController extends ApiController
         $endDay = date_create(date('Y-m-d', strtotime($end_date[0] . '-' . $end_date[1] . '-' . $end_date[2])));
         $diff = date_diff($startDay, $endDay);
         $roomId = [];
+        $supplierID = json_decode($response)->data->supplier_sales;
         for ($i = 0; $i <= $diff->days; $i++) {
             $date = strtotime(date('Y-m-d', strtotime($startDay->format('Y-m-d') . " +" . $i . " days")));
             $roomToday = RoomEpisode::
             where('app_id', $request->input('app_id'))
-                ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
+                ->whereIn('supplier_id', $supplierID)
                 ->where([
                     'status' => Constants::STATUS_ACTIVE,
                     'date' => date('Y-m-d', $date)
@@ -107,7 +108,7 @@ class ReservationController extends ApiController
         foreach ($rooms as $key => $value) {
             $value->price = RoomEpisode::
             where('app_id', $request->input('app_id'))
-                ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
+                ->whereIn('supplier_id', $supplierID)
                 ->where([
                     'status' => Constants::STATUS_ACTIVE,
                     'room_id' => $value->id
@@ -117,7 +118,7 @@ class ReservationController extends ApiController
                 ->sum('price');
             $value->percent = RoomEpisode::
             where('app_id', $request->input('app_id'))
-                ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
+                ->whereIn('supplier_id', $supplierID)
                 ->where([
                     'status' => Constants::STATUS_ACTIVE,
                     'room_id' => $value->id,
@@ -129,7 +130,7 @@ class ReservationController extends ApiController
             $value->price_percent = $value->price - $value->percent;
             $percent = RoomEpisode::
             where('app_id', $request->input('app_id'))
-                ->whereIn('supplier_id', json_decode($response)->data->supplier_id)
+                ->whereIn('supplier_id', $supplierID)
                 ->where([
                     'status' => Constants::STATUS_ACTIVE,
                     'room_id' => $value->id,
