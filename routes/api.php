@@ -27,6 +27,9 @@ Route::namespace('Api\V1')->prefix('/v1')->group(function () {
         //Reservation
         Route::get('/reservation', 'ReservationController@index');
 
+        //Payment
+        Route::post('/payment', 'PaymentController@store');
+
     });
 
 
