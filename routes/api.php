@@ -20,6 +20,10 @@ Route::namespace('Api\V1')->prefix('/v1')->group(function () {
     //Site After login
     Route::middleware('app.api.check')->namespace('Api')->group(function () {
 
+        //Hotel
+        Route::get('/hotel', 'HotelController@index');
+        Route::get('/hotel/{hotel_id}', 'HotelController@show');
+
         //Reservation
         Route::get('/reservation', 'ReservationController@index');
 

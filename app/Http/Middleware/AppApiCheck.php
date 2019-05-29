@@ -26,10 +26,10 @@ class AppApiCheck
             }
             return trim($input);
         }, $request->all());
-        if (!$request->header('appToken'))
+        if (!$request->header('AppToken'))
             throw new ApiException(
                 ApiException::EXCEPTION_UNAUTHORIZED_401,
-                'Plz check your appToken header'
+                'Plz check your AppToken header'
             );
         if (!$request->header('Authorization'))
             throw new ApiException(
@@ -50,7 +50,7 @@ class AppApiCheck
                 "Accept: application/json",
                 "Authorization: " . $request->header('Authorization'),
                 "appName: " . Constants::APP,
-                "appToken: " . $request->header('appToken')
+                "appToken: " . $request->header('AppToken')
             ),
         ));
         $response = curl_exec($curl);
@@ -71,7 +71,7 @@ class AppApiCheck
         $input['user_id'] = $tokenAuth->user_id;
         $input['agent'] = $tokenAuth->agent;
         $input['role'] = $tokenAuth->role;
-        $tokenApp = JWT::decode($request->header('appToken'), config("jwt.secret"), array('HS256'));
+        $tokenApp = JWT::decode($request->header('AppToken'), config("jwt.secret"), array('HS256'));
         $input['apps_id'] = $tokenApp->apps_id;
         $input['api_id'] = $tokenApp->api_id;
         $input['app_id'] = json_decode($response)->data->app_id;

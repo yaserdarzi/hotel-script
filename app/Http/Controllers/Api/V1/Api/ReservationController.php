@@ -62,13 +62,23 @@ class ReservationController extends ApiController
                 ApiException::EXCEPTION_BAD_REQUEST_400,
                 json_decode($response)->error
             );
-        if (!$request->input('start_date'))
+        if (!$request->input('check_in'))
             throw new ApiException(
-                ApiException::EXCEPTION_NOT_FOUND_404,
-                'کاربر گرامی ، وارد کردن تاریخ شروع اجباری می باشد.'
+                ApiException::EXCEPTION_BAD_REQUEST_400,
+                "plz check your check_in"
             );
-        $startExplode = explode('/', $request->input('start_date'));
-        $endExplode = explode('/', $request->input('end_date'));
+        if (!$request->input('check_out'))
+            throw new ApiException(
+                ApiException::EXCEPTION_BAD_REQUEST_400,
+                "plz check your check_out"
+            );
+        if (!$request->input('hotel_id'))
+            throw new ApiException(
+                ApiException::EXCEPTION_BAD_REQUEST_400,
+                "plz check your hotel_id"
+            );
+        $startExplode = explode('/', $request->input('check_in'));
+        $endExplode = explode('/', $request->input('check_out'));
         $start_date = \Morilog\Jalali\CalendarUtils::toGregorian($startExplode[0], $startExplode[1], $startExplode[2]);
         $end_date = \Morilog\Jalali\CalendarUtils::toGregorian($endExplode[0], $endExplode[1], $endExplode[2]);
         $startDay = date_create(date('Y-m-d', strtotime($start_date[0] . '-' . $start_date[1] . '-' . $start_date[2])));
@@ -82,6 +92,7 @@ class ReservationController extends ApiController
             where('app_id', $request->input('app_id'))
                 ->whereIn('supplier_id', $supplierID)
                 ->where([
+                    'hotel_id' => $request->input('hotel_id'),
                     'status' => Constants::STATUS_ACTIVE,
                     'date' => date('Y-m-d', $date)
                 ])
@@ -102,50 +113,38 @@ class ReservationController extends ApiController
             ->with('hotel')
             ->whereIn('id', $roomId)
             ->select(
-                '*',
-
-//                "id": 1,
-//            "app_id": 2,
-//            "hotel_id": 1,
-//            "title": "سوئیت یکخوابه چهار نفره",
-//            "image": "http://hotel.local/files/hotel/1/room/b41be6d6529b9d4ff595414c45e9ec6c.png",
-//            "desc": "desc desc desc desc desc desc desc desc",
-//            "capacity": 5,
-//            "bed": "۲ تخت سینگل و ۱ تخت دبل",
-//            "is_breakfast": false,
-//            "is_lunch": false,
-//            "is_dinner": false,
-//            "sort": 1,
-//            "created_at": "2019-05-22 13:37:46",
-//            "updated_at": "2019-05-22 13:37:46",
-//            "deleted_at": null,
-//            "image_thumb": "http://hotel.local/files/hotel/1/room/thumb/b41be6d6529b9d4ff595414c45e9ec6c.png",
-//            "price": "400000",
-//            "percent": 2000,
-//            "price_percent": 398000,
-
-
+                'id as room_id',
+                'hotel_id',
+                'title',
+                'desc',
+                'capacity as bed_capacity',
+                'bed',
+                'is_breakfast',
+                'is_lunch',
+                'is_dinner',
                 DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/', image) ) ELSE '' END as image"),
                 DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/thumb/', image) ) ELSE '' END as image_thumb")
             )
             ->get();
         foreach ($rooms as $key => $value) {
-            $value->price = RoomEpisode::
+            $value->price = intval(RoomEpisode::
             where('app_id', $request->input('app_id'))
                 ->whereIn('supplier_id', $supplierID)
                 ->where([
+                    'hotel_id' => $request->input('hotel_id'),
                     'status' => Constants::STATUS_ACTIVE,
-                    'room_id' => $value->id
+                    'room_id' => $value->room_id
                 ])
                 ->where('capacity_remaining', '>', 0)
                 ->whereBetween('date', [$startDay, $endDay])
-                ->sum('price');
+                ->sum('price'));
             $value->percent = RoomEpisode::
             where('app_id', $request->input('app_id'))
                 ->whereIn('supplier_id', $supplierID)
                 ->where([
+                    'hotel_id' => $request->input('hotel_id'),
                     'status' => Constants::STATUS_ACTIVE,
-                    'room_id' => $value->id,
+                    'room_id' => $value->room_id,
                     'type_percent' => Constants::TYPE_PERCENT_PRICE
                 ])
                 ->where('capacity_remaining', '>', 0)
@@ -156,8 +155,9 @@ class ReservationController extends ApiController
             where('app_id', $request->input('app_id'))
                 ->whereIn('supplier_id', $supplierID)
                 ->where([
+                    'hotel_id' => $request->input('hotel_id'),
                     'status' => Constants::STATUS_ACTIVE,
-                    'room_id' => $value->id,
+                    'room_id' => $value->room_id,
                     'type_percent' => Constants::TYPE_PERCENT_PERCENT
                 ])
                 ->where('capacity_remaining', '>', 0)

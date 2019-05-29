@@ -29,7 +29,7 @@ class Hotel extends Model
     {
         return $this->hasMany(HotelGallery::class, 'hotel_id', 'id')
             ->select(
-                '*',
+                'mime_type',
                 DB::raw("CASE WHEN path != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/', path) ) ELSE '' END as path"),
                 DB::raw("CASE WHEN path != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/thumb/', path) ) ELSE '' END as path_thumb")
             );
