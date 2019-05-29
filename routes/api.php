@@ -18,6 +18,15 @@ if (App::environment() == "production")
 Route::namespace('Api\V1')->prefix('/v1')->group(function () {
 
     //Site After login
+    Route::middleware('app.api.check')->namespace('Api')->group(function () {
+
+        //Reservation
+        Route::get('/reservation', 'ReservationController@index');
+
+    });
+
+
+    //Supplier
     Route::middleware('app.supplier.check')->namespace('Supplier')->prefix('/supplier')->group(function () {
 
         //Hotel
@@ -38,7 +47,7 @@ Route::namespace('Api\V1')->prefix('/v1')->group(function () {
 
     });
 
-    //Site After login
+    //Agency
     Route::middleware('app.agency.check')->namespace('Agency')->prefix('/agency')->group(function () {
 
         //Reservation

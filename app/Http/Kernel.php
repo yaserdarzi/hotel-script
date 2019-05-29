@@ -64,6 +64,7 @@ class Kernel extends HttpKernel
         //customize
         'app.supplier.check' => \App\Http\Middleware\AppSupplierCheck::class,
         'app.agency.check' => \App\Http\Middleware\AppAgencyCheck::class,
+        'app.api.check' => \App\Http\Middleware\AppApiCheck::class,
     ];
 
     /**
