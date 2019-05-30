@@ -27,7 +27,7 @@ class Hotel extends Model
 
     public function gallery()
     {
-        return $this->hasMany(HotelGallery::class, 'id', 'hotel_id')
+        return $this->hasMany(HotelGallery::class, 'hotel_id', 'id')
             ->select(
                 'mime_type',
                 DB::raw("CASE WHEN path != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/', path) ) ELSE '' END as path"),
