@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Supplier\WebService;
 
 use App\Exceptions\ApiException;
+use App\Hotel;
 use App\Http\Controllers\ApiController;
 use App\Inside\Constants;
 use App\Inside\Helpers;
@@ -117,7 +118,15 @@ class ReservationController extends ApiController
             $value->percent = $value->percent + $percentPercent;
             $value->price_percent = $value->price_percent + $pricePercent;
         }
-        return $this->respond($rooms);
+        $hotel = Hotel::join(Constants::HOTEL_SUPPLIER_DB, Constants::HOTEL_DB . '.id', '=', Constants::HOTEL_SUPPLIER_DB . '.hotel_id')
+            ->with("gallery")
+            ->select(
+                '*',
+                DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/', logo) ) ELSE '' END as logo"),
+                DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/thumb/', logo) ) ELSE '' END as logo_thumb")
+            )
+            ->where(Constants::HOTEL_SUPPLIER_DB . '.supplier_id', $request->input('supplier_id'))->first();
+        return $this->respond(["room" => $rooms, "hotel" => $hotel]);
     }
 
     /**

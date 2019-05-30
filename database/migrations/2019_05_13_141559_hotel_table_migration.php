@@ -26,8 +26,8 @@ class HotelTableMigration extends Migration
             $table->integer('count_room')->default(0);
             $table->string('delivery_room')->nullable();
             $table->string('discharge_room')->nullable();
-            $table->text('rule')->nullable();
-            $table->text('recovery')->nullable();
+            $table->longText('rule')->nullable();
+            $table->longText('recovery')->nullable();
             $table->json('global')->nullable();
             $table->json('possibilities')->nullable();
             $table->json('terms_of_use')->nullable();
