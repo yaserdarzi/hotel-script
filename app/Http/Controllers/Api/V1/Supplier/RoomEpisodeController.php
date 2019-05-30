@@ -129,10 +129,7 @@ class RoomEpisodeController extends ApiController
                 $typePercent = Constants::TYPE_PERCENT_PERCENT;
                 break;
             default:
-                throw new ApiException(
-                    ApiException::EXCEPTION_NOT_FOUND_404,
-                    'کاربر گرامی ، وارد کردن نوع تخفیف (تومان یا درصد) اجباری می باشد.'
-                );
+                $typePercent = Constants::TYPE_PERCENT_PRICE;
         }
         if (!$request->input('start_date'))
             throw new ApiException(
@@ -275,10 +272,7 @@ class RoomEpisodeController extends ApiController
                 $typePercent = Constants::TYPE_PERCENT_PERCENT;
                 break;
             default:
-                throw new ApiException(
-                    ApiException::EXCEPTION_NOT_FOUND_404,
-                    'کاربر گرامی ، وارد کردن نوع تخفیف (تومان یا درصد) اجباری می باشد.'
-                );
+                $typePercent = Constants::TYPE_PERCENT_PRICE;
         }
         switch ($request->input('status')) {
             case Constants::STATUS_ACTIVE:
