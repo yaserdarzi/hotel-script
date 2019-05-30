@@ -58,6 +58,9 @@ Route::namespace('Api\V1')->prefix('/v1')->group(function () {
         //Agency
         Route::namespace('WebService')->prefix('/webservice')->group(function () {
 
+            //Hotel Room
+            Route::get('/hotel/{hotel_id}/room', 'RoomController@index');
+
             //Hotel Gallery
             Route::get('/hotel/{hotel_id}/gallery', 'HotelGalleryController@index');
 
