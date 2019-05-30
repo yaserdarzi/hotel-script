@@ -30,6 +30,9 @@ Route::namespace('Api\V1')->prefix('/v1')->group(function () {
         //Payment
         Route::post('/payment', 'PaymentController@store');
 
+        //Get Ticket
+        Route::get('/ticket', 'TicketController@index');
+
     });
 
 
