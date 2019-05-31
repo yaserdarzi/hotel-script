@@ -66,6 +66,7 @@ Route::namespace('Api\V1')->prefix('/v1')->group(function () {
 
             //Reservation
             Route::get('/reservation', 'ReservationController@index');
+            Route::get('/reservation/{room_id}', 'ReservationController@show');
 
 
         });
