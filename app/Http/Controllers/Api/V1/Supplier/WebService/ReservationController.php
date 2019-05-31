@@ -158,7 +158,92 @@ class ReservationController extends ApiController
      */
     public function show(Request $request, $id)
     {
-        //
+        $startExplode = explode('/', $request->input('start_date'));
+        $endExplode = explode('/', $request->input('end_date'));
+        $start_date = \Morilog\Jalali\CalendarUtils::toGregorian($startExplode[0], $startExplode[1], $startExplode[2]);
+        $end_date = \Morilog\Jalali\CalendarUtils::toGregorian($endExplode[0], $endExplode[1], $endExplode[2]);
+        $startDay = date_create(date('Y-m-d', strtotime($start_date[0] . '-' . $start_date[1] . '-' . $start_date[2])));
+        $endDay = date_create(date('Y-m-d', strtotime($end_date[0] . '-' . $end_date[1] . '-' . $end_date[2])));
+        $diff = date_diff($startDay, $endDay);
+        $roomId = $id;
+        $supplierID = [$request->input('supplier_id')];
+        for ($i = 0; $i <= $diff->days; $i++) {
+            $date = strtotime(date('Y-m-d', strtotime($startDay->format('Y-m-d') . " +" . $i . " days")));
+            $roomToday = RoomEpisode::
+            where('app_id', $request->input('app_id'))
+                ->whereIn('supplier_id', $supplierID)
+                ->where([
+                    'status' => Constants::STATUS_ACTIVE,
+                    'date' => date('Y-m-d', $date)
+                ])
+                ->where('capacity_remaining', '>', 0)
+                ->groupBy('room_id')
+                ->pluck('room_id');
+            if (!sizeof($roomToday))
+                throw new ApiException(
+                    ApiException::EXCEPTION_NOT_FOUND_404,
+                    'کاربر گرامی ، اتاق مورد نظر خالی می باشد.'
+                );
+        }
+        $rooms = Room::where('app_id', $request->input('app_id'))
+            ->with('hotel')
+            ->where('id', $roomId)
+            ->select(
+                '*',
+                DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/', image) ) ELSE '' END as image"),
+                DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/thumb/', image) ) ELSE '' END as image_thumb")
+            )
+            ->first();
+        if (!$rooms)
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی ، اتاق مورد نظر خالی می باشد.'
+            );
+        $rooms->price = RoomEpisode::
+        where('app_id', $request->input('app_id'))
+            ->whereIn('supplier_id', $supplierID)
+            ->where([
+                'status' => Constants::STATUS_ACTIVE,
+                'room_id' => $rooms->id
+            ])
+            ->where('capacity_remaining', '>', 0)
+            ->whereBetween('date', [$startDay, $endDay])
+            ->sum('price');
+        $rooms->percent = RoomEpisode::
+        where('app_id', $request->input('app_id'))
+            ->whereIn('supplier_id', $supplierID)
+            ->where([
+                'status' => Constants::STATUS_ACTIVE,
+                'room_id' => $rooms->id,
+                'type_percent' => Constants::TYPE_PERCENT_PRICE
+            ])
+            ->where('capacity_remaining', '>', 0)
+            ->whereBetween('date', [$startDay, $endDay])
+            ->sum('percent');
+        $rooms->price_percent = $rooms->price - $rooms->percent;
+        $percent = RoomEpisode::
+        where('app_id', $request->input('app_id'))
+            ->whereIn('supplier_id', $supplierID)
+            ->where([
+                'status' => Constants::STATUS_ACTIVE,
+                'room_id' => $rooms->id,
+                'type_percent' => Constants::TYPE_PERCENT_PERCENT
+            ])
+            ->where('capacity_remaining', '>', 0)
+            ->whereBetween('date', [$startDay, $endDay])
+            ->get();
+        $pricePercent = 0;
+        $percentPercent = 0;
+        if (sizeof($percent)) {
+            foreach ($percent as $valPercent) {
+                $floatPercent = floatval("0." . $valPercent->percent);
+                $percentPercent = $percentPercent + ($valPercent->price * $floatPercent);
+                $pricePercent = $pricePercent + ($valPercent->price - intval($percentPercent));
+            }
+        }
+        $rooms->percent = $rooms->percent + $percentPercent;
+        $rooms->price_percent = $rooms->price_percent + $pricePercent;
+        return $this->respond($rooms);
     }
 
     /**
