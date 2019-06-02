@@ -47,7 +47,8 @@ class RoomEpisodeController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'plz check your date'
             );
-        $date = \Morilog\Jalali\CalendarUtils::toGregorian(Jalalian::forge($request->input('date'))->getYear(), Jalalian::forge($request->input('date'))->getMonth(), Jalalian::forge($request->input('date'))->getDay());
+        $arrayDate = explode('/', $request->input('date'));
+        $date = \Morilog\Jalali\CalendarUtils::toGregorian($arrayDate[0], $arrayDate[1], $arrayDate[2]);
         $date = date('Y-m-d', strtotime($date[0] . '-' . $date[1] . '-' . $date[2]));
         $roomEpisode = RoomEpisode::where('app_id', $request->input('app_id'))
             ->with('room')
