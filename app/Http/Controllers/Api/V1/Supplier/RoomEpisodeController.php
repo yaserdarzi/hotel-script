@@ -301,7 +301,8 @@ class RoomEpisodeController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، امکان کم کردن ظرفیت وجود ندارد.'
             );
-        $date = \Morilog\Jalali\CalendarUtils::toGregorian(Jalalian::forge($request->input('date'))->getYear(), Jalalian::forge($request->input('date'))->getMonth(), Jalalian::forge($request->input('date'))->getDay());
+        $arrayDate = explode('/', $request->input('date'));
+        $date = \Morilog\Jalali\CalendarUtils::toGregorian($arrayDate[0], $arrayDate[1], $arrayDate[2]);
         $date = date_create(date('Y-m-d', strtotime($date[0] . '-' . $date[1] . '-' . $date[2])));
         RoomEpisode::where('id', $id)->update([
             'capacity' => $request->input('capacity'),
