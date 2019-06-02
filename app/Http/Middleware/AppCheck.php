@@ -59,12 +59,12 @@ class AppCheck
         curl_close($curl);
         if ($err)
             throw new ApiException(
-                ApiException::EXCEPTION_BAD_REQUEST_400,
+                ApiException::EXCEPTION_UNAUTHORIZED_401,
                 $err
             );
         if ($info['http_code'] != 200)
             throw new ApiException(
-                ApiException::EXCEPTION_BAD_REQUEST_400,
+                ApiException::EXCEPTION_UNAUTHORIZED_401,
                 json_decode($response)->error
             );
         $tokenAuth = JWT::decode($request->header('Authorization'), config("jwt.secret"), array('HS256'));
