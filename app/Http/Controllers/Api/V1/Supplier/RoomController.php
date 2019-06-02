@@ -151,11 +151,11 @@ class RoomController extends ApiController
             'image' => $image,
             'desc' => $request->input('desc'),
             'bed' => $request->input('bed'),
-            'capacity' => $request->input('capacity'),
+            'capacity' => $this->help->normalizePhoneNumber($request->input('capacity')),
             'is_breakfast' => $is_breakfast,
             'is_lunch' => $is_lunch,
             'is_dinner' => $is_dinner,
-            'sort' => $request->input('sort'),
+            'sort' =>$this->help->normalizePhoneNumber( $request->input('sort')),
         ]);
         return $this->respond(["status" => "success"]);
     }
@@ -290,11 +290,11 @@ class RoomController extends ApiController
             'image' => $image,
             'desc' => $request->input('desc'),
             'bed' => $request->input('bed'),
-            'capacity' => $request->input('capacity'),
+            'capacity' => $this->help->normalizePhoneNumber($request->input('capacity')),
             'is_breakfast' => $is_breakfast,
             'is_lunch' => $is_lunch,
             'is_dinner' => $is_dinner,
-            'sort' => $request->input('sort'),
+            'sort' => $this->help->normalizePhoneNumber($request->input('sort')),
         ]);
         return $this->respond(["status" => "success"]);
     }

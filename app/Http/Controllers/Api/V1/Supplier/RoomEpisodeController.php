@@ -154,11 +154,11 @@ class RoomEpisodeController extends ApiController
                 'hotel_id' => $hotel_id,
                 'room_id' => $request->input('room_id'),
                 'supplier_id' => $request->input('supplier_id'),
-                'capacity' => $request->input('capacity'),
-                'capacity_remaining' => $request->input('capacity'),
+                'capacity' => $this->help->normalizePhoneNumber($request->input('capacity')),
+                'capacity_remaining' => $this->help->normalizePhoneNumber($request->input('capacity')),
                 'price' => $this->help->priceNumberDigitsToNormal($request->input('price')),
                 'type_percent' => $typePercent,
-                'percent' => $request->input('percent'),
+                'percent' => $this->help->normalizePhoneNumber($request->input('percent')),
                 'date' => date('Y-m-d', $date),
             ]);
         }
@@ -307,10 +307,10 @@ class RoomEpisodeController extends ApiController
         $date = \Morilog\Jalali\CalendarUtils::toGregorian($arrayDate[0], $arrayDate[1], $arrayDate[2]);
         $date = date_create(date('Y-m-d', strtotime($date[0] . '-' . $date[1] . '-' . $date[2])));
         RoomEpisode::where('id', $id)->update([
-            'capacity' => $request->input('capacity'),
+            'capacity' => $this->help->normalizePhoneNumber($request->input('capacity')),
             'price' => $this->help->priceNumberDigitsToNormal($request->input('price')),
             'type_percent' => $typePercent,
-            'percent' => $request->input('percent'),
+            'percent' => $this->help->normalizePhoneNumber($request->input('percent')),
             'date' => $date->format('Y-m-d'),
             'status' => $status,
         ]);
