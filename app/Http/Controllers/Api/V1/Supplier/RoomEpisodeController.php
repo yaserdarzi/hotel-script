@@ -301,7 +301,10 @@ class RoomEpisodeController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، امکان کم کردن ظرفیت وجود ندارد.'
             );
+
         $arrayDate = explode('/', $request->input('date'));
+        if (!sizeof($arrayDate))
+            $arrayDate = explode('-', $request->input('date'));
         $date = \Morilog\Jalali\CalendarUtils::toGregorian($arrayDate[0], $arrayDate[1], $arrayDate[2]);
         $date = date_create(date('Y-m-d', strtotime($date[0] . '-' . $date[1] . '-' . $date[2])));
         RoomEpisode::where('id', $id)->update([
