@@ -17,13 +17,12 @@ class Hotel extends Model
         'terms_of_use' => 'object',
     ];
     protected $fillable = [
-        'app_id', 'name', 'logo', 'about', 'address',
-        'star', 'count_floor', 'count_room', 'delivery_room',
-        'discharge_room', 'rule', 'recovery', 'global', 'possibilities',
-        'terms_of_use', 'lat', 'long', 'sort'
+        'app_id', 'name', 'tell', 'fax', 'web', 'email', 'logo',
+        'about', 'address', 'star', 'count_floor', 'count_room',
+        'delivery_room', 'discharge_room', 'rule', 'recovery', 'global',
+        'possibilities', 'terms_of_use', 'lat', 'long', 'sort'
     ];
     protected $dates = ['deleted_at'];
-
 
     public function gallery()
     {

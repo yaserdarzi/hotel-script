@@ -18,6 +18,10 @@ class HotelTableMigration extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('app_id');
             $table->string('name');
+            $table->string('tell')->nullable();
+            $table->string('fax')->nullable();
+            $table->string('web')->nullable();
+            $table->string('email')->nullable();
             $table->string('logo');
             $table->longText('about');
             $table->text('address');

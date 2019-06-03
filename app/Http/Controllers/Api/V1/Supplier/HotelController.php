@@ -137,6 +137,10 @@ class HotelController extends ApiController
         $hotel = Hotel::create([
             'app_id' => $request->input('app_id'),
             'name' => $request->input('name'),
+            'tell' => $request->input('tell'),
+            'fax' => $request->input('fax'),
+            'web' => $request->input('web'),
+            'email' => $request->input('email'),
             'address' => $request->input('address'),
             'star' => $this->help->normalizePhoneNumber($request->input('star')),
             'logo' => $logo,
@@ -285,6 +289,10 @@ class HotelController extends ApiController
         }
         Hotel::where('id', $id)->update([
             'name' => $request->input('name'),
+            'tell' => $request->input('tell'),
+            'fax' => $request->input('fax'),
+            'web' => $request->input('web'),
+            'email' => $request->input('email'),
             'address' => $request->input('address'),
             'star' => $this->help->normalizePhoneNumber($request->input('star')),
             'logo' => $logo,
