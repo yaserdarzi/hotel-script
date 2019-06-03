@@ -12,8 +12,6 @@ use App\RoomEpisode;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
-use Morilog\Jalali\CalendarUtils;
-use Morilog\Jalali\Jalalian;
 use Morilog\Jalali\jDate;
 
 class ReservationController extends ApiController
