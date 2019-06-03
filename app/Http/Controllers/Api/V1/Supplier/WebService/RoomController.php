@@ -6,13 +6,11 @@ use App\Exceptions\ApiException;
 use App\Hotel;
 use App\HotelSupplier;
 use App\Http\Controllers\ApiController;
-use App\Inside\Constants;
 use App\Inside\Helpers;
 use App\Room;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
-use Intervention\Image\Facades\Image;
 
 class RoomController extends ApiController
 {

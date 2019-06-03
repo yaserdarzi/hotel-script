@@ -7,12 +7,10 @@ use App\Hotel;
 use App\HotelGallery;
 use App\HotelSupplier;
 use App\Http\Controllers\ApiController;
-use App\Inside\Constants;
 use App\Inside\Helpers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
-use Intervention\Image\Facades\Image;
 
 class HotelGalleryController extends ApiController
 {

@@ -71,6 +71,9 @@ Route::namespace('Api\V1')->prefix('/v1')->group(function () {
             //Payment
             Route::Post('/payment', 'ShoppingController@store');
 
+            //Agency Request
+            Route::Post('/agency/request', 'AgencyRequestController@store');
+
 
         });
 
