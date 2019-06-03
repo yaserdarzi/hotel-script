@@ -316,6 +316,7 @@ class RoomEpisodeController extends ApiController
         $date = date_create(date('Y-m-d', strtotime($date[0] . '-' . $date[1] . '-' . $date[2])));
         RoomEpisode::where('id', $id)->update([
             'capacity' => $this->help->normalizePhoneNumber($request->input('capacity')),
+            'capacity_remaining' => intval($this->help->normalizePhoneNumber($request->input('capacity')) - $roomEpisode->capacity_filled),
             'price' => $this->help->priceNumberDigitsToNormal($request->input('price')),
             'type_percent' => $typePercent,
             'percent' => $this->help->normalizePhoneNumber($request->input('percent')),
