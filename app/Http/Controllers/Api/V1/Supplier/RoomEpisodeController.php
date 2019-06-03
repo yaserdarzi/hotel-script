@@ -149,18 +149,26 @@ class RoomEpisodeController extends ApiController
         $diff = date_diff($startDay, $endDay);
         for ($i = 0; $i <= $diff->days; $i++) {
             $date = strtotime(date('Y-m-d', strtotime($startDay->format('Y-m-d') . " +" . $i . " days")));
-            RoomEpisode::create([
+            $status = RoomEpisode::where([
                 'app_id' => $request->input('app_id'),
                 'hotel_id' => $hotel_id,
                 'room_id' => $request->input('room_id'),
                 'supplier_id' => $request->input('supplier_id'),
-                'capacity' => $this->help->normalizePhoneNumber($request->input('capacity')),
-                'capacity_remaining' => $this->help->normalizePhoneNumber($request->input('capacity')),
-                'price' => $this->help->priceNumberDigitsToNormal($request->input('price')),
-                'type_percent' => $typePercent,
-                'percent' => $this->help->normalizePhoneNumber($request->input('percent')),
                 'date' => date('Y-m-d', $date),
-            ]);
+            ])->exists();
+            if (!$status)
+                RoomEpisode::create([
+                    'app_id' => $request->input('app_id'),
+                    'hotel_id' => $hotel_id,
+                    'room_id' => $request->input('room_id'),
+                    'supplier_id' => $request->input('supplier_id'),
+                    'capacity' => $this->help->normalizePhoneNumber($request->input('capacity')),
+                    'capacity_remaining' => $this->help->normalizePhoneNumber($request->input('capacity')),
+                    'price' => $this->help->priceNumberDigitsToNormal($request->input('price')),
+                    'type_percent' => $typePercent,
+                    'percent' => $this->help->normalizePhoneNumber($request->input('percent')),
+                    'date' => date('Y-m-d', $date),
+                ]);
         }
         return $this->respond(["status" => "success"]);
     }
