@@ -146,18 +146,18 @@ class HotelController extends ApiController
             ->with("gallery")
             ->where(['id' => $hotel_id])
             ->select(
+                'id',
                 'id as hotel_id',
                 'name',
                 'about',
                 'address',
+                'rule',
+                'recovery',
                 'star',
                 'count_floor',
                 'count_room',
                 'delivery_room',
                 'discharge_room',
-                'global',
-                'possibilities',
-                'terms_of_use',
                 DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/', logo) ) ELSE '' END as logo"),
                 DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/thumb/', logo) ) ELSE '' END as logo_thumb")
             )
