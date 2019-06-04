@@ -91,6 +91,7 @@ class RackController extends ApiController
                     $data['capacity_remaining'] = 0;
                 }
                 $data['date'] = CalendarUtils::strftime('Y-m-d', $date);
+                $data['day'] = CalendarUtils::strftime('%A', $date);
                 $episode[$i] = $data;
             }
             $value->episode = $episode;
