@@ -84,11 +84,13 @@ class RackController extends ApiController
                     $data['capacity'] = $roomEpisode->capacity;
                     $data['capacity_filled'] = $roomEpisode->capacity_filled;
                     $data['capacity_remaining'] = $roomEpisode->capacity_remaining;
+                    $data['price'] = $roomEpisode->price;
                 } else {
                     $data['status'] = Constants::ROOM_STATUS_UNDEFINED;
                     $data['capacity'] = 0;
                     $data['capacity_filled'] = 0;
                     $data['capacity_remaining'] = 0;
+                    $data['price'] = 0;
                 }
                 $data['date'] = CalendarUtils::strftime('Y-m-d', $date);
                 $data['day'] = CalendarUtils::strftime('%A', $date);
