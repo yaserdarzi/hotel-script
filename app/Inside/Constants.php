@@ -45,4 +45,10 @@ class Constants
     const AUDIO_TYPE = ["audio/mpeg", "audio/x-wav", "audio/ogg", "audio/mp4", "audio/midi", "audio/basic", "audio/adpcm", "audio//s3m", "audio/mp3",
         "audio/silk", "audio/webm", "audio/m4a"];
 
+    //Room Status
+    const ROOM_STATUS_EMPTY = 'empty';
+    const ROOM_STATUS_FULL = 'full';
+    const ROOM_STATUS_RESERVABLE = 'reservable';
+    const ROOM_STATUS_UNDEFINED = 'undefined';
+
 }
