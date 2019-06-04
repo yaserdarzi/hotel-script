@@ -43,6 +43,9 @@ Route::namespace('Api\V1')->prefix('/v1')->group(function () {
         Route::post('/hotel/update/{hotel_id}', 'HotelController@update');
         Route::resource('/hotel', 'HotelController');
 
+        //Hotel Comment
+        Route::resource('/hotel/{hotel_id}/comment', 'HotelCommentController');
+
         //Hotel Gallery
         Route::resource('/hotel/{hotel_id}/gallery', 'HotelGalleryController');
 

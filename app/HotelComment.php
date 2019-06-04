@@ -12,6 +12,7 @@ class HotelComment extends Model
     ];
     protected $table = Constants::HOTEL_COMMENT_DB;
     protected $fillable = [
-        'hotel_id', 'name', 'comment', 'path', 'info'
+        'app_id', 'hotel_id', 'name', 'comment', 'path',
+        'mime_type', 'info'
     ];
 }
