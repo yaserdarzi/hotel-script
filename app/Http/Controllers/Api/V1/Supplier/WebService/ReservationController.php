@@ -65,7 +65,16 @@ class ReservationController extends ApiController
             ->with('hotel')
             ->whereIn('id', $roomId)
             ->select(
-                '*',
+                'id',
+                'app_id',
+                'hotel_id',
+                'title',
+                'image',
+                'desc',
+                'bed',
+                'is_breakfast',
+                'is_lunch',
+                'is_dinner',
                 DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/', image) ) ELSE '' END as image"),
                 DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/thumb/', image) ) ELSE '' END as image_thumb")
             )
@@ -119,7 +128,24 @@ class ReservationController extends ApiController
         $hotel = Hotel::join(Constants::HOTEL_SUPPLIER_DB, Constants::HOTEL_DB . '.id', '=', Constants::HOTEL_SUPPLIER_DB . '.hotel_id')
             ->with("gallery")
             ->select(
-                '*',
+                Constants::HOTEL_DB . '.id',
+                'name',
+                'logo',
+                'about',
+                'address',
+                'star',
+                'count_floor',
+                'count_room',
+                'delivery_room',
+                'discharge_room',
+                'tell',
+                'web',
+                'email',
+                'fax',
+                'rule',
+                'recovery',
+                'supplier_id',
+                'hotel_id',
                 DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/', logo) ) ELSE '' END as logo"),
                 DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/thumb/', logo) ) ELSE '' END as logo_thumb")
             )
@@ -187,7 +213,16 @@ class ReservationController extends ApiController
             ->with('hotel')
             ->where('id', $roomId)
             ->select(
-                '*',
+                'id',
+                'app_id',
+                'hotel_id',
+                'title',
+                'image',
+                'desc',
+                'bed',
+                'is_breakfast',
+                'is_lunch',
+                'is_dinner',
                 DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/', image) ) ELSE '' END as image"),
                 DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/thumb/', image) ) ELSE '' END as image_thumb")
             )

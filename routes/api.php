@@ -62,6 +62,9 @@ Route::namespace('Api\V1')->prefix('/v1')->group(function () {
         //Hotel Rack
         Route::get('/hotel/{hotel_id}/rack', 'RackController@index');
 
+        //Setting
+        Route::get('/setting', 'SettingController@index');
+
         //Agency
         Route::namespace('WebService')->prefix('/webservice')->group(function () {
 
