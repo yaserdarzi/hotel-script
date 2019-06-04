@@ -25,6 +25,7 @@ class Constants
     const HOTEL_GALLERY_DB = 'hotel_gallery';
     const HOTEL_TOOLS_DB = 'hotel_tools';
     const HOTEL_DISTANCE_DB = 'hotel_distance';
+    const HOTEL_COMMENT_DB = 'hotel_comment';
     const ROOM_DB = 'room';
     const ROOM_GALLERY_DB = 'room_gallery';
     const ROOM_TOOLS_DB = 'room_tools';
@@ -32,7 +33,7 @@ class Constants
 
 
     //Type Percent
-    const TYPE_PERCENT_PERCENT= "percent";
+    const TYPE_PERCENT_PERCENT = "percent";
     const TYPE_PERCENT_PRICE = "price";
 
     //Extension Check File
