@@ -154,7 +154,7 @@ class HotelCommentController extends ApiController
                 'plz check your hotel_id'
             );
         $hotelComment = HotelComment::where('app_id', $request->input('app_id'))
-            ->where(['hotel_id' => $hotel_id])
+            ->where(['hotel_id' => $hotel_id, 'id' => $id])
             ->select(
                 '*',
                 DB::raw("CASE WHEN path != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/comment/', path) ) ELSE '' END as path"),
