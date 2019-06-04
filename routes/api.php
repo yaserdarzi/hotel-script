@@ -59,6 +59,9 @@ Route::namespace('Api\V1')->prefix('/v1')->group(function () {
         Route::post('/hotel/{hotel_id}/room/update/{room_id}', 'RoomController@update');
         Route::resource('/hotel/{hotel_id}/room', 'RoomController');
 
+        //Hotel Rack
+        Route::get('/hotel/{hotel_id}/rack', 'RackController@index');
+
         //Agency
         Route::namespace('WebService')->prefix('/webservice')->group(function () {
 
