@@ -8,6 +8,7 @@ use App\HotelSupplier;
 use App\Http\Controllers\ApiController;
 use App\Inside\Constants;
 use App\Inside\Helpers;
+use App\RoomEpisode;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
@@ -324,6 +325,11 @@ class HotelController extends ApiController
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'plz check your id'
+            );
+        if (RoomEpisode::where('hotel_id', $id)->exists())
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی هتل مورد نظر دارای سانس می باشد.'
             );
         Hotel::where('id', $id)->delete();
         return $this->respond(["status" => "success"]);
