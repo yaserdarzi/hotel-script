@@ -28,6 +28,8 @@ class RoomEpisodeTableMigration extends Migration
             $table->bigInteger('percent')->default(0);
             $table->timestamp('date');
             $table->string('status')->default(Constants::STATUS_ACTIVE);
+            $table->boolean('is_capacity')->default(false);
+            $table->bigInteger('add_price')->default(0);
             $table->timestamps();
         });
         Schema::table(Constants::ROOM_EPISODE_DB, function (Blueprint $table) {

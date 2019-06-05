@@ -27,8 +27,6 @@ class RoomTableMigration extends Migration
             $table->boolean('is_lunch')->default(false);
             $table->boolean('is_dinner')->default(false);
             $table->integer('sort')->default(1);
-            $table->boolean('is_capacity')->default(false);
-            $table->bigInteger('price')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

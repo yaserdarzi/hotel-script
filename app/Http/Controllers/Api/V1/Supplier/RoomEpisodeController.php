@@ -142,6 +142,9 @@ class RoomEpisodeController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، وارد کردن تاریخ پایان اجباری می باشد.'
             );
+        $is_capacity = false;
+        if ($request->input('is_capacity'))
+            $is_capacity = true;
         $arrayStartDate = explode('/', $request->input('start_date'));
         $arrayEndDate = explode('/', $request->input('end_date'));
         $start_date = \Morilog\Jalali\CalendarUtils::toGregorian($arrayStartDate[0], $arrayStartDate[1], $arrayStartDate[2]);
@@ -170,6 +173,8 @@ class RoomEpisodeController extends ApiController
                     'type_percent' => $typePercent,
                     'percent' => $this->help->normalizePhoneNumber($request->input('percent')),
                     'date' => date('Y-m-d', $date),
+                    'is_capacity' => $is_capacity,
+                    'add_price' => $this->help->normalizePhoneNumber($request->input('add_price')),
                 ]);
         }
         return $this->respond(["status" => "success"]);
@@ -311,6 +316,9 @@ class RoomEpisodeController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، امکان کم کردن ظرفیت وجود ندارد.'
             );
+        $is_capacity = false;
+        if ($request->input('is_capacity'))
+            $is_capacity = true;
         $arrayDate = explode('/', $request->input('date'));
         if (sizeof($arrayDate) == 1)
             $arrayDate = explode('-', $request->input('date'));
@@ -324,6 +332,8 @@ class RoomEpisodeController extends ApiController
             'percent' => $this->help->normalizePhoneNumber($request->input('percent')),
             'date' => $date->format('Y-m-d'),
             'status' => $status,
+            'is_capacity' => $is_capacity,
+            'add_price' => $this->help->normalizePhoneNumber($request->input('add_price')),
         ]);
         return $this->respond(["status" => "success"]);
     }

@@ -13,8 +13,7 @@ class Room extends Model
     protected $table = Constants::ROOM_DB;
     protected $fillable = [
         'app_id', 'hotel_id', 'title', 'image', 'desc', 'bed', 'capacity',
-        'is_breakfast', 'is_lunch', 'is_dinner', 'is_capacity',
-        'price', 'sort'
+        'is_breakfast', 'is_lunch', 'is_dinner', 'sort'
     ];
     protected $dates = ['deleted_at'];
 

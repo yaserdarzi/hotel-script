@@ -145,9 +145,6 @@ class RoomController extends ApiController
         $is_dinner = false;
         if ($request->input('is_dinner'))
             $is_dinner = true;
-        $is_capacity = false;
-        if ($request->input('is_capacity'))
-            $is_capacity = true;
         Room::create([
             'app_id' => $request->input('app_id'),
             'hotel_id' => $hotel_id,
@@ -160,8 +157,6 @@ class RoomController extends ApiController
             'is_lunch' => $is_lunch,
             'is_dinner' => $is_dinner,
             'sort' => $this->help->normalizePhoneNumber($request->input('sort')),
-            'is_capacity' => $is_capacity,
-            'price' => $this->help->normalizePhoneNumber($request->input('price')),
         ]);
         return $this->respond(["status" => "success"]);
     }
@@ -291,9 +286,6 @@ class RoomController extends ApiController
         $is_dinner = false;
         if ($request->input('is_dinner'))
             $is_dinner = true;
-        $is_capacity = false;
-        if ($request->input('is_capacity'))
-            $is_capacity = true;
         Room::where('id', $id)->update([
             'title' => $request->input('title'),
             'image' => $image,
@@ -304,8 +296,6 @@ class RoomController extends ApiController
             'is_lunch' => $is_lunch,
             'is_dinner' => $is_dinner,
             'sort' => $this->help->normalizePhoneNumber($request->input('sort')),
-            'is_capacity' => $is_capacity,
-            'price' => $this->help->normalizePhoneNumber($request->input('price')),
         ]);
         return $this->respond(["status" => "success"]);
     }
