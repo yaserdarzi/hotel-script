@@ -74,7 +74,7 @@ class RoomController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
             );
-        if ($request->input('role')!=Constants::ROLE_ADMIN)
+        if ($request->input('role') != Constants::ROLE_ADMIN)
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
@@ -156,7 +156,7 @@ class RoomController extends ApiController
             'is_breakfast' => $is_breakfast,
             'is_lunch' => $is_lunch,
             'is_dinner' => $is_dinner,
-            'sort' =>$this->help->normalizePhoneNumber( $request->input('sort')),
+            'sort' => $this->help->normalizePhoneNumber($request->input('sort')),
         ]);
         return $this->respond(["status" => "success"]);
     }
@@ -215,7 +215,7 @@ class RoomController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
             );
-        if ($request->input('role')!=Constants::ROLE_ADMIN)
+        if ($request->input('role') != Constants::ROLE_ADMIN)
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
@@ -313,7 +313,7 @@ class RoomController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
             );
-        if ($request->input('role')!=Constants::ROLE_ADMIN)
+        if ($request->input('role') != Constants::ROLE_ADMIN)
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
