@@ -128,7 +128,7 @@ class ReservationController extends ApiController
                         'status' => Constants::STATUS_ACTIVE,
                         'room_id' => $value->id
                     ])->whereBetween('date', [$startDay, $endDay])
-                    ->get();
+                    ->orderBy('date')->get();
                 $value->is_buy = true;
                 foreach ($value->episode as $keyEpisode => $valEpisode) {
                     $is_full = false;
