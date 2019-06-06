@@ -375,7 +375,7 @@ class RoomEpisodeController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، امکان حذف این سانس وجود ندارد.'
             );
-        if ($request->input('capacity') < $roomEpisode->capacity_filled)
+        if ($roomEpisode->capacity_filled != 0)
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، امکان حذف این سانس وجود ندارد.'
