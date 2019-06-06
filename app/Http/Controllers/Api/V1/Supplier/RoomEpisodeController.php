@@ -66,7 +66,9 @@ class RoomEpisodeController extends ApiController
                 "type_percent",
                 "percent",
                 "date",
-                "status"
+                "status",
+                'is_capacity',
+                'add_price'
             )->get()->map(function ($value) {
                 $value->date_persian = CalendarUtils::strftime('Y-m-d', strtotime($value->date));
                 return $value;
@@ -219,7 +221,9 @@ class RoomEpisodeController extends ApiController
                 "type_percent",
                 "percent",
                 "date",
-                "status"
+                "status",
+                'is_capacity',
+                'add_price'
             )->first();
         $roomEpisode->date_persian = CalendarUtils::strftime('Y-m-d', strtotime($roomEpisode->date));
         return $this->respond($roomEpisode);
