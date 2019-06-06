@@ -130,15 +130,21 @@ class ReservationController extends ApiController
                     ])->whereBetween('date', [$startDay, $endDay])
                     ->orderBy('date')->get();
                 $value->is_buy = true;
+                $value->is_capacity = true;
+                $value->add_price = 0;
                 foreach ($value->episode as $keyEpisode => $valEpisode) {
                     $is_full = false;
+                    if ($valEpisode->is_capacity == false)
+                        $value->is_capacity = false;
+                    else
+                        $value->add_price += $valEpisode->add_price;
                     if ($valEpisode->capacity_remaining == 0) {
                         $value->is_buy = false;
                         $is_full = true;
                     }
                     $price_percent = $valEpisode->price;
                     if ($valEpisode->type_percent == Constants::TYPE_PERCENT_PERCENT)
-                        if ($value->percent != 10)
+                        if ($value->percent != 0)
                             $price_percent = ($value->percent / 100) * $value->price;
                         elseif ($valEpisode->type_percent == Constants::TYPE_PERCENT_PRICE)
                             $price_percent = $valEpisode->price - $valEpisode->percent;
@@ -149,7 +155,6 @@ class ReservationController extends ApiController
                         'price_percent' => $price_percent,
                         'is_full' => $is_full,
                     ];
-//                    unset($value->episode[$keyEpisode]);
                     $value->episode[$keyEpisode] = $episode;
                 }
                 $value->price = RoomEpisode::
@@ -158,9 +163,7 @@ class ReservationController extends ApiController
                     ->where([
                         'status' => Constants::STATUS_ACTIVE,
                         'room_id' => $value->id
-                    ])
-                    ->where('capacity_remaining', '>', 0)
-                    ->whereBetween('date', [$startDay, $endDay])
+                    ])->whereBetween('date', [$startDay, $endDay])
                     ->sum('price');
                 $value->percent = RoomEpisode::
                 where('app_id', $request->input('app_id'))
@@ -169,9 +172,7 @@ class ReservationController extends ApiController
                         'status' => Constants::STATUS_ACTIVE,
                         'room_id' => $value->id,
                         'type_percent' => Constants::TYPE_PERCENT_PRICE
-                    ])
-                    ->where('capacity_remaining', '>', 0)
-                    ->whereBetween('date', [$startDay, $endDay])
+                    ])->whereBetween('date', [$startDay, $endDay])
                     ->sum('percent');
                 $value->price_percent = $value->price - $value->percent;
                 $percent = RoomEpisode::
@@ -181,17 +182,16 @@ class ReservationController extends ApiController
                         'status' => Constants::STATUS_ACTIVE,
                         'room_id' => $value->id,
                         'type_percent' => Constants::TYPE_PERCENT_PERCENT
-                    ])
-                    ->where('capacity_remaining', '>', 0)
-                    ->whereBetween('date', [$startDay, $endDay])
+                    ])->whereBetween('date', [$startDay, $endDay])
                     ->get();
                 $pricePercent = 0;
                 $percentPercent = 0;
                 if (sizeof($percent)) {
                     foreach ($percent as $valPercent) {
-                        $floatPercent = floatval("0." . $valPercent->percent);
-                        $percentPercent = $percentPercent + ($valPercent->price * $floatPercent);
-                        $pricePercent = $pricePercent + ($valPercent->price - intval($percentPercent));
+                        if ($valPercent->percent != 0) {
+                            $percentPercent += ($valPercent->percent / 100) * $valPercent->price;
+                            $pricePercent = ($valPercent->percent / 100) * $valPercent->price;
+                        }
                     }
                 }
                 $value->percent = $value->percent + $percentPercent;
