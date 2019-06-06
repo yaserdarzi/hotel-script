@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Agency;
 
 use App\Exceptions\ApiException;
+use App\Hotel;
 use App\Http\Controllers\ApiController;
 use App\Inside\Constants;
 use App\Inside\Helpers;
@@ -103,62 +104,72 @@ class ReservationController extends ApiController
                 $roomId = array_intersect($roomId, $roomToday->toArray());
             }
         }
-        $rooms = Room::where('app_id', $request->input('app_id'))
-            ->with('hotel')
-            ->whereIn('id', $roomId)
+        $hotel = Hotel::where('app_id', $request->input('app_id'))
             ->select(
-                '*',
-                DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/', image) ) ELSE '' END as image"),
-                DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/thumb/', image) ) ELSE '' END as image_thumb")
-            )
-            ->get();
-        foreach ($rooms as $key => $value) {
-            $value->price = RoomEpisode::
-            where('app_id', $request->input('app_id'))
-                ->whereIn('supplier_id', $supplierID)
-                ->where([
-                    'status' => Constants::STATUS_ACTIVE,
-                    'room_id' => $value->id
-                ])
-                ->where('capacity_remaining', '>', 0)
-                ->whereBetween('date', [$startDay, $endDay])
-                ->sum('price');
-            $value->percent = RoomEpisode::
-            where('app_id', $request->input('app_id'))
-                ->whereIn('supplier_id', $supplierID)
-                ->where([
-                    'status' => Constants::STATUS_ACTIVE,
-                    'room_id' => $value->id,
-                    'type_percent' => Constants::TYPE_PERCENT_PRICE
-                ])
-                ->where('capacity_remaining', '>', 0)
-                ->whereBetween('date', [$startDay, $endDay])
-                ->sum('percent');
-            $value->price_percent = $value->price - $value->percent;
-            $percent = RoomEpisode::
-            where('app_id', $request->input('app_id'))
-                ->whereIn('supplier_id', $supplierID)
-                ->where([
-                    'status' => Constants::STATUS_ACTIVE,
-                    'room_id' => $value->id,
-                    'type_percent' => Constants::TYPE_PERCENT_PERCENT
-                ])
-                ->where('capacity_remaining', '>', 0)
-                ->whereBetween('date', [$startDay, $endDay])
-                ->get();
-            $pricePercent = 0;
-            $percentPercent = 0;
-            if (sizeof($percent)) {
-                foreach ($percent as $valPercent) {
-                    $floatPercent = floatval("0." . $valPercent->percent);
-                    $percentPercent = $percentPercent + ($valPercent->price * $floatPercent);
-                    $pricePercent = $pricePercent + ($valPercent->price - intval($percentPercent));
+                'id',
+                'app_id',
+                'name',
+                'address',
+                'star',
+                DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/thumb/', logo) ) ELSE '' END as logo_thumb")
+            )->get();
+        foreach ($hotel as $valHotel) {
+            $valHotel->rooms = Room::where('app_id', $request->input('app_id'))
+                ->where('hotel_id', $valHotel->id)
+                ->whereIn('id', $roomId)
+                ->select(
+                    '*',
+                    DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/', image) ) ELSE '' END as image"),
+                    DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/thumb/', image) ) ELSE '' END as image_thumb")
+                )->get();
+            foreach ($valHotel->rooms as $key => $value) {
+                $value->price = RoomEpisode::
+                where('app_id', $request->input('app_id'))
+                    ->whereIn('supplier_id', $supplierID)
+                    ->where([
+                        'status' => Constants::STATUS_ACTIVE,
+                        'room_id' => $value->id
+                    ])
+                    ->where('capacity_remaining', '>', 0)
+                    ->whereBetween('date', [$startDay, $endDay])
+                    ->sum('price');
+                $value->percent = RoomEpisode::
+                where('app_id', $request->input('app_id'))
+                    ->whereIn('supplier_id', $supplierID)
+                    ->where([
+                        'status' => Constants::STATUS_ACTIVE,
+                        'room_id' => $value->id,
+                        'type_percent' => Constants::TYPE_PERCENT_PRICE
+                    ])
+                    ->where('capacity_remaining', '>', 0)
+                    ->whereBetween('date', [$startDay, $endDay])
+                    ->sum('percent');
+                $value->price_percent = $value->price - $value->percent;
+                $percent = RoomEpisode::
+                where('app_id', $request->input('app_id'))
+                    ->whereIn('supplier_id', $supplierID)
+                    ->where([
+                        'status' => Constants::STATUS_ACTIVE,
+                        'room_id' => $value->id,
+                        'type_percent' => Constants::TYPE_PERCENT_PERCENT
+                    ])
+                    ->where('capacity_remaining', '>', 0)
+                    ->whereBetween('date', [$startDay, $endDay])
+                    ->get();
+                $pricePercent = 0;
+                $percentPercent = 0;
+                if (sizeof($percent)) {
+                    foreach ($percent as $valPercent) {
+                        $floatPercent = floatval("0." . $valPercent->percent);
+                        $percentPercent = $percentPercent + ($valPercent->price * $floatPercent);
+                        $pricePercent = $pricePercent + ($valPercent->price - intval($percentPercent));
+                    }
                 }
+                $value->percent = $value->percent + $percentPercent;
+                $value->price_percent = $value->price_percent + $pricePercent;
             }
-            $value->percent = $value->percent + $percentPercent;
-            $value->price_percent = $value->price_percent + $pricePercent;
         }
-        return $this->respond($rooms);
+        return $this->respond($hotel);
     }
 
     /**
