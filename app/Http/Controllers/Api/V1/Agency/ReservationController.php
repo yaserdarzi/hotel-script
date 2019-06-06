@@ -90,9 +90,7 @@ class ReservationController extends ApiController
                 ->where([
                     'status' => Constants::STATUS_ACTIVE,
                     'date' => date('Y-m-d', $date)
-                ])
-                ->where('capacity_remaining', '>', 0)
-                ->groupBy('room_id')
+                ])->groupBy('room_id')
                 ->pluck('room_id');
             if (!sizeof($roomToday)) {
                 $roomId = [];
@@ -123,6 +121,36 @@ class ReservationController extends ApiController
                     DB::raw("CASE WHEN image != '' THEN (concat ( '" . url('') . "/files/hotel/',hotel_id,'/room/thumb/', image) ) ELSE '' END as image_thumb")
                 )->get();
             foreach ($valHotel->rooms as $key => $value) {
+                $value->episode = RoomEpisode::
+                where('app_id', $request->input('app_id'))
+                    ->whereIn('supplier_id', $supplierID)
+                    ->where([
+                        'status' => Constants::STATUS_ACTIVE,
+                        'room_id' => $value->id
+                    ])->whereBetween('date', [$startDay, $endDay])
+                    ->get();
+                $value->is_buy = true;
+                foreach ($value->episode as $keyEpisode => $valEpisode) {
+                    $is_full = false;
+                    if ($valEpisode->capacity_remaining == 0) {
+                        $value->is_buy = false;
+                        $is_full = true;
+                    }
+                    $price_percent = 0;
+                    if ($valEpisode->type_percent == Constants::TYPE_PERCENT_PERCENT)
+                        $price_percent = ($value->percent / 100) * $value->price;
+                    elseif ($valEpisode->type_percent == Constants::TYPE_PERCENT_PRICE)
+                        $price_percent = $valEpisode->price - $valEpisode->percent;
+                    $episode = [
+                        'date' => CalendarUtils::strftime('Y-m-d', strtotime($valEpisode->date)),
+                        'day' => CalendarUtils::strftime('%A', strtotime($valEpisode->date)),
+                        'price' => $valEpisode->price,
+                        'price_percent' => $price_percent,
+                        'is_full' => $is_full,
+                    ];
+//                    unset($value->episode[$keyEpisode]);
+                    $value->episode[$keyEpisode] = $episode;
+                }
                 $value->price = RoomEpisode::
                 where('app_id', $request->input('app_id'))
                     ->whereIn('supplier_id', $supplierID)
