@@ -84,7 +84,8 @@ Route::namespace('Api\V1')->prefix('/v1')->group(function () {
             //Agency Request
             Route::Post('/agency/request', 'AgencyRequestController@store');
 
-
+            //Hotel Comment
+            Route::get('/hotel/{hotel_id}/comment', 'HotelCommentController@index');
         });
 
     });
