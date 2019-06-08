@@ -79,7 +79,8 @@ class ReservationController extends ApiController
         $supplierID = array_unique(
             array_merge(
                 json_decode($response)->data->supplier_sales,
-                json_decode($response)->data->supplier_agency
+                json_decode($response)->data->supplier_agency,
+                json_decode($response)->data->agency_agency
             )
         );
         for ($i = 0; $i <= $diff->days; $i++) {
