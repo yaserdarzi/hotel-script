@@ -145,7 +145,7 @@ class RoomEpisodeController extends ApiController
                 'کاربر گرامی ، وارد کردن تاریخ پایان اجباری می باشد.'
             );
         $is_capacity = false;
-        if ($request->input('is_capacity') == false)
+        if ($request->input('is_capacity') == true)
             $is_capacity = true;
         $arrayStartDate = explode('/', $request->input('start_date'));
         $arrayEndDate = explode('/', $request->input('end_date'));
@@ -321,7 +321,7 @@ class RoomEpisodeController extends ApiController
                 'کاربر گرامی ، امکان کم کردن ظرفیت وجود ندارد.'
             );
         $is_capacity = false;
-        if ($request->input('is_capacity') == false)
+        if ($request->input('is_capacity') == true)
             $is_capacity = true;
         $arrayDate = explode('/', $request->input('date'));
         if (sizeof($arrayDate) == 1)
