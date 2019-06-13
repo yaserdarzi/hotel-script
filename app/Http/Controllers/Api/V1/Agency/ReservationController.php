@@ -154,6 +154,7 @@ class ReservationController extends ApiController
                             'day' => CalendarUtils::strftime('%A', strtotime($valEpisode->date)),
                             'price' => $valEpisode->price,
                             'price_percent' => $price_percent,
+                            'capacity_remaining' => $valEpisode->capacity_remaining,
                             'is_full' => $is_full,
                         ];
                         $value->episode[$keyEpisode] = $episode;
