@@ -144,11 +144,11 @@ class ReservationController extends ApiController
                             $is_full = true;
                         }
                         $price_percent = $valEpisode->price;
-                        if ($valEpisode->type_percent == Constants::TYPE_PERCENT_PERCENT)
+                        if ($valEpisode->type_percent == Constants::TYPE_PERCENT_PERCENT) {
                             if ($value->percent != 0)
                                 $price_percent = ($value->percent / 100) * $value->price;
-                            elseif ($valEpisode->type_percent == Constants::TYPE_PERCENT_PRICE)
-                                $price_percent = $valEpisode->price - $valEpisode->percent;
+                        } elseif ($valEpisode->type_percent == Constants::TYPE_PERCENT_PRICE)
+                            $price_percent = $valEpisode->price - $valEpisode->percent;
                         $episode = [
                             'date' => CalendarUtils::strftime('Y-m-d', strtotime($valEpisode->date)),
                             'day' => CalendarUtils::strftime('%A', strtotime($valEpisode->date)),
