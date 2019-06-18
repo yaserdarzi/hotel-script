@@ -145,8 +145,10 @@ class ReservationController extends ApiController
                         }
                         $price_percent = $valEpisode->price;
                         if ($valEpisode->type_percent == Constants::TYPE_PERCENT_PERCENT) {
-                            if ($value->percent != 0)
+                            if ($value->percent != 0) {
                                 $price_percent = ($value->percent / 100) * $value->price;
+                                $price_percent = $valEpisode->price - $price_percent;
+                            }
                         } elseif ($valEpisode->type_percent == Constants::TYPE_PERCENT_PRICE)
                             $price_percent = $valEpisode->price - $valEpisode->percent;
                         $episode = [
