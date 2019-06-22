@@ -65,7 +65,7 @@ Route::namespace('Api\V1')->prefix('/v1')->group(function () {
         //Setting
         Route::get('/setting', 'SettingController@index');
 
-        //Agency
+        //Supplier Webservice
         Route::namespace('WebService')->prefix('/webservice')->group(function () {
 
             //Hotel Room
