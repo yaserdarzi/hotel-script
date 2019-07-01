@@ -188,7 +188,7 @@ class RoomEpisodeController extends ApiController
                     'percent' => $this->help->normalizePhoneNumber($request->input('percent')),
                     'date' => date('Y-m-d', $date),
                     'is_capacity' => $is_capacity,
-                    'add_price' => $this->help->normalizePhoneNumber($request->input('add_price')),
+                    'add_price' => intval($this->help->normalizePhoneNumber($request->input('add_price'))),
                 ]);
         }
         return $this->respond(["status" => "success"]);
