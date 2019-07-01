@@ -122,7 +122,7 @@ class RoomEpisodeController extends ApiController
         if (!$request->input('capacity_power_up'))
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
-                'کاربر گرامی ، وارد کردن ظرفیت پاوراپ (تعداد اتاق) اجباری می باشد.'
+                'کاربر گرامی ، وارد کردن ظرفیت پاورآپ (تعداد اتاق) اجباری می باشد.'
             );
         if (!$request->input('price'))
             throw new ApiException(
@@ -132,7 +132,7 @@ class RoomEpisodeController extends ApiController
         if (!$request->input('price_power_up'))
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
-                'کاربر گرامی ، وارد کردن قیمت پاوراپ اجباری می باشد.'
+                'کاربر گرامی ، وارد کردن قیمت پاورآپ اجباری می باشد.'
             );
         switch ($request->input('type_percent')) {
             case Constants::TYPE_PERCENT_PRICE:
