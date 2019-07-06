@@ -153,7 +153,8 @@ class ReservationController extends ApiController
                                     $is_full = true;
                                 }
                                 if ($commission->is_price_power_up) {
-                                    $price = $valEpisode->price_power_up;
+                                    $price = $valEpisode->price;
+                                    $price_computing = $valEpisode->price_power_up;
                                     $price_percent = $valEpisode->price_power_up;
                                     if ($valEpisode->type_percent == Constants::TYPE_PERCENT_PERCENT) {
                                         if ($value->percent != 0) {
@@ -164,9 +165,9 @@ class ReservationController extends ApiController
                                         $percent = $valEpisode->percent;
                                         $price_percent = $valEpisode->price_power_up - $valEpisode->percent;
                                     }
-
                                 } else {
                                     $price = $valEpisode->price;
+                                    $price_computing = $valEpisode->price;
                                     $price_percent = $valEpisode->price;
                                     if ($valEpisode->type_percent == Constants::TYPE_PERCENT_PERCENT) {
                                         if ($value->percent != 0) {
@@ -180,7 +181,7 @@ class ReservationController extends ApiController
                                 }
                                 if ($commission->type == Constants::TYPE_PERCENT_PERCENT) {
                                     if ($commission->percent < 100)
-                                        $price_percent = intval($price_percent - (($commission->percent / 100) * $price));
+                                        $price_percent = intval($price_percent - (($commission->percent / 100) * $price_computing));
                                 } elseif ($commission->type == Constants::TYPE_PERCENT_PRICE)
                                     $price_percent = $price_percent - $commission->price;
                                 $episode = [
