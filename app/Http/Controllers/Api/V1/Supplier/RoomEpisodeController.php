@@ -119,10 +119,20 @@ class RoomEpisodeController extends ApiController
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، وارد کردن ظرفیت (تعداد اتاق) اجباری می باشد.'
             );
+        if (!$request->input('capacity_power_up'))
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی ، وارد کردن ظرفیت پاورآپ (تعداد اتاق) اجباری می باشد.'
+            );
         if (!$request->input('price'))
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی ، وارد کردن قیمت اجباری می باشد.'
+            );
+        if (!$request->input('price_power_up'))
+            throw new ApiException(
+                ApiException::EXCEPTION_NOT_FOUND_404,
+                'کاربر گرامی ، وارد کردن قیمت پاورآپ اجباری می باشد.'
             );
         switch ($request->input('type_percent')) {
             case Constants::TYPE_PERCENT_PRICE:
@@ -170,13 +180,15 @@ class RoomEpisodeController extends ApiController
                     'room_id' => $request->input('room_id'),
                     'supplier_id' => $request->input('supplier_id'),
                     'capacity' => $this->help->normalizePhoneNumber($request->input('capacity')),
+                    'capacity_power_up' => $this->help->normalizePhoneNumber($request->input('capacity_power_up')),
                     'capacity_remaining' => $this->help->normalizePhoneNumber($request->input('capacity')),
                     'price' => $this->help->priceNumberDigitsToNormal($request->input('price')),
+                    'price_power_up' => $this->help->priceNumberDigitsToNormal($request->input('price_power_up')),
                     'type_percent' => $typePercent,
                     'percent' => $this->help->normalizePhoneNumber($request->input('percent')),
                     'date' => date('Y-m-d', $date),
                     'is_capacity' => $is_capacity,
-                    'add_price' => $this->help->normalizePhoneNumber($request->input('add_price')),
+                    'add_price' => intval($this->help->normalizePhoneNumber($request->input('add_price'))),
                 ]);
         }
         return $this->respond(["status" => "success"]);
