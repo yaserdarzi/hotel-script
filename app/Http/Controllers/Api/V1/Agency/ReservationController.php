@@ -205,7 +205,7 @@ class ReservationController extends ApiController
             } else
                 unset($hotel[$keyHotel]);
         }
-        return $this->respond($hotel);
+        return $this->respond($hotel->values()->all());
     }
 
     /**
