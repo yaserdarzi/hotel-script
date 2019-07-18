@@ -112,6 +112,7 @@ class ReservationController extends ApiController
                 'name',
                 'address',
                 'star',
+                DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/', logo) ) ELSE '' END as logo"),
                 DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/thumb/', logo) ) ELSE '' END as logo_thumb")
             )->get();
         foreach ($hotel as $keyHotel => $valHotel) {
