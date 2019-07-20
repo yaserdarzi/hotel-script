@@ -339,5 +339,4 @@ class HotelController extends ApiController
 
     ///////////////////public function///////////////////////
 
-
 }
