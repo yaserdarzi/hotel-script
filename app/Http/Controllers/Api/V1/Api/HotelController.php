@@ -137,7 +137,7 @@ class HotelController extends ApiController
                 json_decode($response)->error
             );
         $supplierID = json_decode($response)->data;
-        if (!HotelSupplier::where(['supplier_id' => $supplierID, 'hotel_id' => $hotel_id])->exists())
+        if (!HotelSupplier::where(['hotel_id' => $hotel_id])->whereIn('supplier_id', $supplierID)->exists())
             throw new ApiException(
                 ApiException::EXCEPTION_NOT_FOUND_404,
                 'کاربر گرامی شما دسترسی به این قسمت ندارید.'
