@@ -145,7 +145,7 @@ class HotelController extends ApiController
                 Constants::HOTEL_SUPPLIER_DB . '.app_id' => $request->input('app_id'),
                 Constants::HOTEL_DB . '.id' => $hotel_id
             ])->select(
-                'id',
+                Constants::HOTEL_DB . '.id',
                 Constants::HOTEL_DB . '.id as hotel_id',
                 'name',
                 'about',
