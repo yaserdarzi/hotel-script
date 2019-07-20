@@ -137,17 +137,16 @@ class HotelController extends ApiController
                 json_decode($response)->error
             );
         $supplierID = json_decode($response)->data;
-        if (!HotelSupplier::where(['supplier_id' => $supplierID, 'hotel_id' => $hotel_id])->exists())
-            throw new ApiException(
-                ApiException::EXCEPTION_NOT_FOUND_404,
-                'کاربر گرامی شما دسترسی به این قسمت ندارید.'
-            );
-        $hotel = Hotel::where('app_id', $request->input('app_id'))
+        $hotel = Hotel::join(Constants::HOTEL_SUPPLIER_DB, Constants::HOTEL_DB . '.id', '=', Constants::HOTEL_SUPPLIER_DB . '.hotel_id')
             ->with("gallery")
-            ->where(['id' => $hotel_id])
-            ->select(
+            ->whereIn('supplier_id', $supplierID)
+            ->where([
+                Constants::HOTEL_DB . '.app_id' => $request->input('app_id'),
+                Constants::HOTEL_SUPPLIER_DB . '.app_id' => $request->input('app_id'),
+                Constants::HOTEL_DB . '.id' => $hotel_id
+            ])->select(
                 'id',
-                'id as hotel_id',
+                Constants::HOTEL_DB . '.id as hotel_id',
                 'name',
                 'about',
                 'address',
@@ -160,8 +159,7 @@ class HotelController extends ApiController
                 'discharge_room',
                 DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/', logo) ) ELSE '' END as logo"),
                 DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/thumb/', logo) ) ELSE '' END as logo_thumb")
-            )
-            ->first();
+            )->first();
         return $this->respond($hotel);
     }
 
