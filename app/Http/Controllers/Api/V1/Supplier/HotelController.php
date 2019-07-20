@@ -302,7 +302,7 @@ class HotelController extends ApiController
             'count_room' => $this->help->normalizePhoneNumber($request->input('count_room')),
             'delivery_room' => $request->input('delivery_room'),
             'discharge_room' => $request->input('discharge_room'),
-            'possibilities' => $request->input('possibilities'),
+            'possibilities' => json_decode($request->input('possibilities')),
             'rule' => $request->input('rule'),
             'recovery' => $request->input('recovery'),
             'about' => $request->input('about'),
