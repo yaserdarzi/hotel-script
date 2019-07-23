@@ -114,7 +114,7 @@ class ReservationController extends ApiController
                 'star',
                 DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/', logo) ) ELSE '' END as logo"),
                 DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/thumb/', logo) ) ELSE '' END as logo_thumb")
-            )->get();
+            )->orderBy('sort')->get();
         foreach ($hotel as $keyHotel => $valHotel) {
             $input = preg_quote(Constants::APP . '-' . $valHotel->id, '~');
             $result = preg_grep('~' . $input . '~', array_column($commissions, 'shopping_id'));
