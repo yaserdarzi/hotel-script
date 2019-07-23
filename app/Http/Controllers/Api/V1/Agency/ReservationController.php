@@ -278,5 +278,4 @@ class ReservationController extends ApiController
 
     ///////////////////public function///////////////////////
 
-
 }
