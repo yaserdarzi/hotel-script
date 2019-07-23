@@ -112,6 +112,7 @@ class ReservationController extends ApiController
                 'name',
                 'address',
                 'star',
+                'sort',
                 DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/', logo) ) ELSE '' END as logo"),
                 DB::raw("CASE WHEN logo != '' THEN (concat ( '" . url('') . "/files/hotel/thumb/', logo) ) ELSE '' END as logo_thumb")
             )->orderBy('sort')->get();
