@@ -154,38 +154,14 @@ class ReservationController extends ApiController
                                     $value->is_buy = false;
                                     $is_full = true;
                                 }
-                                if ($commission->is_price_power_up) {
-                                    $price = $valEpisode->price;
-                                    $price_computing = $valEpisode->price_power_up;
-                                    $price_percent = $valEpisode->price_power_up;
-                                    if ($valEpisode->type_percent == Constants::TYPE_PERCENT_PERCENT) {
-                                        if ($value->percent != 0) {
-                                            $percent = ($value->percent / 100) * $value->price_power_up;
-                                            $price_percent = $valEpisode->price_power_up - $percent;
-                                        }
-                                    } elseif ($valEpisode->type_percent == Constants::TYPE_PERCENT_PRICE) {
-                                        $percent = $valEpisode->percent;
-                                        $price_percent = $valEpisode->price_power_up - $valEpisode->percent;
-                                    }
-                                } else {
-                                    $price = $valEpisode->price;
-                                    $price_computing = $valEpisode->price;
-                                    $price_percent = $valEpisode->price;
-                                    if ($valEpisode->type_percent == Constants::TYPE_PERCENT_PERCENT) {
-                                        if ($value->percent != 0) {
-                                            $percent = ($value->percent / 100) * $value->price;
-                                            $price_percent = $valEpisode->price - $percent;
-                                        }
-                                    } elseif ($valEpisode->type_percent == Constants::TYPE_PERCENT_PRICE) {
-                                        $percent = $valEpisode->percent;
-                                        $price_percent = $valEpisode->price - $valEpisode->percent;
-                                    }
-                                }
+                                $price = $valEpisode->price;
+                                $price_computing = $valEpisode->price;
+                                $price_percent = $valEpisode->price_power_up;
                                 if ($commission->type == Constants::TYPE_PERCENT_PERCENT) {
                                     if ($commission->percent < 100)
-                                        $price_percent = intval($price_percent - (($commission->percent / 100) * $price_computing));
+                                        $price_percent = intval($price_percent + (($commission->percent / 100) * $price_computing));
                                 } elseif ($commission->type == Constants::TYPE_PERCENT_PRICE)
-                                    $price_percent = $price_percent - $commission->price;
+                                    $price_percent = $price_percent + $commission->price;
                                 $episode = [
                                     'date' => CalendarUtils::strftime('Y-m-d', strtotime($valEpisode->date)),
                                     'day' => CalendarUtils::strftime('%A', strtotime($valEpisode->date)),
