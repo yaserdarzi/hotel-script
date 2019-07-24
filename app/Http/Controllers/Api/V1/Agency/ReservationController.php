@@ -155,7 +155,7 @@ class ReservationController extends ApiController
                                     $is_full = true;
                                 }
                                 $price = $valEpisode->price;
-                                $price_computing = $valEpisode->price;
+                                $price_computing = $valEpisode->price_power_up;
                                 $price_percent = $valEpisode->price_power_up;
                                 if ($commission->type == Constants::TYPE_PERCENT_PERCENT) {
                                     if ($commission->percent < 100)
